@@ -1,3 +1,13 @@
+# Apache JMeter
+
+## What can I do with it?
+
+## How do I do it?
+
+## JMeter is not a browser
+
+## Tuto
+
 # User’s Manual
 
 ## 1. Getting Started
@@ -64,7 +74,7 @@ Note you can
 
 #### 1.4.9 CLI mode shutdown
 
-### 1.5 Configuraing JMeter
+### 1.5 Configuring JMeter
 
 
 
@@ -94,7 +104,7 @@ Adding and Removing Elements
 
 ### 3.1 Thread Group
 
-### 3.2 COntrollers
+### 3.2 Controllers
 
 #### 3.2.1 Samplers
 
@@ -120,7 +130,7 @@ Adding and Removing Elements
 
 ### 3.11 Properties and Variables
 
-### 3.12 Using Variables to parameterise tests
+### 3.12 Using Variables to parameterize tests
 
 
 
@@ -180,7 +190,7 @@ Building a Database Test Plan
 
 ##### 14.2.1.1 Filtering Configuration
 
-##### 14.2.1.2 Save Service configuraion
+##### 14.2.1.2 Save Service configuration
 
 ##### 14.2.1.3 Transaction Controller configuration
 
@@ -206,7 +216,7 @@ Building a Database Test Plan
 
 ### 14.3 Generating reports
 
-#### 14.3.1 Gerneration from an existing sample CSV log file
+#### 14.3.1 Generation from an existing sample CSV log file
 
 #### 14.3.2 Generation after load test
 
@@ -216,7 +226,7 @@ Building a Database Test Plan
 
 ### 14.5 Generating customs graphs over time
 
-### 14.6 Want to improve Report Dashborad?
+### 14.6 Want to improve Report Dashboard?
 
 
 
@@ -242,7 +252,23 @@ Real time Results
 
 ### 16.9 BeanShell scripting
 
-#### 
+####16.9.1 Overview
+
+#### 16.9.2 Sharing Variables
+
+### 16.10 Developing script functions in Groovy or Jexl3 etc.
+
+### 16.11 Parameterizing tests
+
+### 16.12 JSR223 Elements
+
+### 16.13 Sharing variables between threads and thread groups
+
+### 16.14 managing properties
+
+### 16.15 Deprecated elements
+
+
 
 ## 17. Help! My boss wants me to load test our web app!
 
@@ -266,7 +292,7 @@ The following resources will prove very helpful. Bear in mind that if you cannot
 
 #### Network
 
-Who knows our network topology? If you run into any firewall or proxy isssues, this will become very important. A well, a private testing network (which will therefore have very low network latency) would be a very nice thing. Knowing who can set one up for you (if you feel that this is necessary) will be very useful. If the application doesn’t scale as expected, who can add additional hardware?
+Who knows our network topology? If you run into any firewall or proxy issues, this will become very important. A well, a private testing network (which will therefore have very low network latency) would be a very nice thing. Knowing who can set one up for you (if you feel that this is necessary) will be very useful. If the application doesn’t scale as expected, who can add additional hardware?
 
 #### Application
 
@@ -281,9 +307,9 @@ The test process may progress from black-box testing to white-box testing (the d
 
 ###  What platform should I use to run the benchmarks/load-tests?
 
-This should be a widely-used piece of hardware, with a standard (i.e. vanilla) software installation. Remember, if you publish your results, the fist thing your clients will do is hire a gradute student to verify them. You might as well make it as easy for this person as you possibly can.
+This should be a widely-used piece of hardware, with a standard (i.e. vanilla) software installation. Remember, if you publish your results, the fist thing your clients will do is hire a graduate student to verify them. You might as well make it as easy for this person as you possibly can.
 
-For Windows, Windows XP Perfessional should be a minimum (the others do not multi-thread past 50-60 connections, and you probably anticipate more users than that).
+For Windows, Windows XP Professional should be a minimum (the others do not multi-thread past 50-60 connections, and you probably anticipate more users than that).
 
 Good free platforms include the linuxes, the BSDs, and Solaris Intel. If you have a little more money, there are commercial linuxes. This may be worth it if you need the support.
 
@@ -299,7 +325,7 @@ Don’t forget JMeter batch (CLI) mode. This mode should be used during load tes
 
 * If you have a powerful server that supports Java but perhaps does not have a fast graphics implementation, or where you need to login remotely.
 * Batch (CLI) mode can reduce the network traffic compared with using a remote display or client-server mode.
-* Java AWT Thread used for GUI mode can alter injection behaviour by blocking sometimes
+* Java AWT Thread used for GUI mode can alter injection behavior by blocking sometimes
 
 The batch log file can then be loaded into JMeter on a workstation for analysis, or you can use CSV output and import the data into a spreadsheet.
 
@@ -315,17 +341,17 @@ This can be used to establish whether or not you can reach your target site. Opt
 
 #### nslookup/dig
 
-While the user will normally use a human-readable internet address, you may wish to avoid the overhead of DNS lookups when performing benchmarking/load-testing. These can be used to determine the unique address (dotted quad) of your target site.
+While the user will normally use a human-readable Internet address, you may wish to avoid the overhead of DNS lookups when performing benchmarking/load-testing. These can be used to determine the unique address (dotted quad) of your target site.
 
 #### traceroute
 
-If you cannot “ping” your target site, this may be used to determine the problem (possibly a firewall or proxy). It can also be used to estimate the overall network latency (running locally should give the lowest possible network latency - remember that your users will be running over a possibly busy internet). Generally, the fewer hops the better.
+If you cannot “ping” your target site, this may be used to determine the problem (possibly a firewall or proxy). It can also be used to estimate the overall network latency (running locally should give the lowest possible network latency - remember that your users will be running over a possibly busy Internet). Generally, the fewer hops the better.
 
 ### How can I enhance JMeter?
 
-There a lof ot open-source and commercial providers who provide JMeter plugins or other resources for use with JMeter.
+There a lot of open-source and commercial providers who provide JMeter plugins or other resources for use with JMeter.
 
-Some of these are listed on the JMeter Wiki. They are listed unser several categories:
+Some of these are listed on the JMeter Wiki. They are listed under several categories:
 
 * JMeterPlugins - plugins for extending JMeter
 * JMeterAddons - addons for use with JMeter, e.g. plugins for browsers, Maven and Jenkins.
@@ -337,11 +363,11 @@ Note that appearance of these on the Wiki does not imply any endorsement by the 
 
 Why not Perl or C?
 
-Well, Perl might be a very good choice except that the Benchmark package seems to give fairly fuzzy results. Also, simulating multiple users with Perl is a tricky proposition (multiple connections can be simualted by forking many processes from a shell script, but these will not be threads, they will be processes). However, the Perl community is very large. If you find that someone has already written something that seems useful, this could be a very good solution.
+Well, Perl might be a very good choice except that the Benchmark package seems to give fairly fuzzy results. Also, simulating multiple users with Perl is a tricky proposition (multiple connections can be simulated by forking many processes from a shell script, but these will not be threads, they will be processes). However, the Perl community is very large. If you find that someone has already written something that seems useful, this could be a very good solution.
 
 C, of course, is a very good choice(check out the Apache ab tool). But be prepared to write all of the custom networking, threading, and state management code that you will need to benchmark you application.
 
-Java gives you (for free) the custom networking, theading, and state management code that you will need to benchmark your application. Java is aware of HTTP, FTP, and HTTPS - as well as RMI, IIOP, and JDBC (not to mention cookies, URL-encoding, and URL-rewriting). In addition Java gives you automatic garbage-collection, and byte-code level security.
+Java gives you (for free) the custom networking, threading, and state management code that you will need to benchmark your application. Java is aware of HTTP, FTP, and HTTPS - as well as RMI, IIOP, and JDBC (not to mention cookies, URL-encoding, and URL-rewriting). In addition Java gives you automatic garbage-collection, and byte-code level security.
 
 
 
