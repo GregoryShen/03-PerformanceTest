@@ -312,17 +312,127 @@ You have the ability to create a new Test Plan from existing template.
 
 #### 1.4.3 Using JMeter behind a proxy
 
+
+
 #### 1.4.4 CLI Mode(Command Line mode was called NON GUI mode)
+
+For load testing, you must run JMeter in this mode (without the GUI) to get the optimal results from it. To do so, use the following command options:
+
+`-n`
+
+​		This specifies JMeter is to run in cli mode
+
+`-t`
+
+​		[name of JMX file that contains the Test Plan]
+
+`-l`
+
+​		[name of JTL file to log sample results to]
+
+`-j`
+
+​		[name of JMeter run log file]
+
+`-r`
+
+​		Run the test in the servers specified by the JMeter property “remote_hosts”
+
+`-R`
+
+​		[list of remote servers] Run the test in the specified remote servers
+
+`-g`
+
+​		[path to CSV file] generate report dashboard only
+
+`-e`
+
+​		generate report dashboard after load test
+
+`-o`
+
+​		output folder where to generate the report dashboard after load test. Folder must not exist or be empty
+
+The script also lets you specify the optional firewall/proxy server information:
+
+`-H`
+
+​		[proxy server hostname or ip address]
+
+`-P`
+
+​		[proxy server port]
+
+Example
+
+```shell
+jmeter -n -t my_test.jmx -l log.jtl -H my.proxy.server -P 8000
+```
+
+If the property `jmeterengine.stopfail.system.exit` is set to `true` (default is `false`), then JMeter will invoke `System.exit(1)` if it cannot stop all threads. Normally this is not necessary.
 
 #### 1.4.5 Server Mode
 
+For distributed testing, run JMeter in server mode on the remote node(s), and then control the server(s) from   the GUI. You can also use CLI mode to run remote tests. To start the server(s), run `jmeter-server[.bat]` on each server host.
+
+The script also lets you specify the optional firewall/proxy server information.
+
+`-H`
+
+​		[proxy server hostname or ip address]
+
+`-P`
+
+​		[proxy server port]
+
+Example:
+
+```shell
+jmeter-server -H my.proxy.server -P 8000
+```
+
+If you want the server to exit after a single test has been run, then define the JMeter property
+
+`server.exitaftertest=true`.
+
+To run the test from the client in CLI mode, use the following command:
+
+```shell
+jmeter -n -t testplan.jmx -r [-Gprop=val] [-Gglobal.properties] [-X]
+```
+
+where:
+
+`-G`
+
+​		is used to define JMeter properties to be set in the servers
+
+`-X`
+
+​		means exit the servers at the end of the test
+
+`-Rserver1, server2`
+
+​		can be used instead of `-r` to provide a list of servers to start. Overrides `remote_hosts`, but does not define the property.
+
+If the property `jmeterengine.remote.system.exit` is set to `true` (default is `false`), then JMeter will invoke `System.exit(0)` after stopping RMI at the end of a test. Normally this is not necessary.
+
 #### 1.4.6 Overriding Properties Via The Command Line
+
+
 
 #### 1.4.7 Logging and error messages
 
+
+
 #### 1.4.8 Full list of command-line options
 
+
+
 #### 1.4.9 CLI mode shutdown
+
+
 
 ### 1.5 Configuring JMeter
 
@@ -346,23 +456,49 @@ To save tree elements, right click on an element and choose the “Save Selectio
 
 ### 2.3 Configuring Tree Elements
 
+Any element in the test tree will present controls in JMeter’s right-hand frame. These controls allow you to configure the behavior of that particular test element. What can be configured for an element depends on what type of element it is.
 
+> The Test Tree itself can be manipulated by dragging and dropping components arount the test tree.
 
 ### 2.4 Saving the Test Plan
 
+Although it is not required, we recommend that you save the Test Plan to a file before running it. To save the Test Plan, select “save” or “save Test Plan As…” from the File menu (with the latest release, it is no longer necessary to select the Test Plan element first).
 
+> JMeter allows you to save the entire Test Plan tree or only a portion of it. To save only the elements located in a particular “branch” of the Test Plan tree, select the Test Plan element in the tree from which to start the “branch”, and then click your right mouse button to access the “<u>Save Selection As …</u>” menu item. Alternatively, select the appropriate Test Plan element and then select “<u>Save Selection As …</u>” from the Edit menu.
 
 ### 2.5 Running a Test Plan
 
+To run your test plan, choose “Start”(`Control` + `r`) from the “Run” menu item. When JMeter is running, it shows a small green box at the right hand end of the section just under the menu bar. You can also check the “Run” menu. If “Start” is disabled, and “Stop” is enabled, then JMeter is running your test plan (or, at least, it thinks it is).
 
+The numbers to the lef of the green box are the number of active threads/total number of threads. These only apply to a locally run test; they do not include any threads started on remote systems when using client-server mode.
+
+> Using GUI mode as described here should only be used when debugging your Test Plan. To run the real load test, use CLI mode.
 
 ### 2.6 Stopping a Test
 
+There are two types of stop command available from the menu:
 
+* `Stop`(`Control`+`.`) - stops the threads immediately if possible. Many samplers are Interruptiable which means that active samples can be terminated early. The stop command will check that all threads have stopped within the default timeout, which is 5000 ms = 5 seconds. [This can be changed using the JMeter property `jmeterengine.threadstop.wait`] if the threads have not stopped, then a message is displayed. The Stop command can be retried, but if it fails, then it is necessary to exit JMeter to clean up.
+* `Shutdown`(`Control` + `,`) - requests the threads to stop at the end of any current work. Will not interrupt any active samples. The modal shutdown dialog box will remain active until all threads have stopped.
+
+If Shutdown is taking too long. Close the Shutdown dialog box and select Run/Stop, or just press `Control` + `.`.
+
+When running JMeter in CLI mode, there is no Menu, and JMeter does not react to keystrokes such as `Control` + `.`. So JMeter CLI mode will listen for commands on a specific port(default 4445, see the JMeter property `jmeterengine.nongui.port`). JMeter supports automatic choice of an alternate port if the default port is being used (for example by another JMeter instance). In this case, JMeter will try the next higher port, continuing until it reaches the JMeter property `jmeterengine.nongui.maxport` which defaults to 4455. If `maxport` is less than or equal to `port`, port scanning will not take place.
+
+The chosen port is displayed in the console window.
+
+The commands currently supported are:
+
+* `Shutdown` - greacefu shutdown
+* `StopTestNow` - immediate shutdown
+
+These commands can be sent by using the `shutdown[.cnd|.sh]` or `stoptest[.cmd|.sh]` script respectively. The scripts are to be found in the JMeter <u>bin</u> directory. The commands will only be accepted if the script is run from the same host.
 
 ### 2.7 Error reporting
 
+JMeter reports warnings and errors to the jmeter.log file, as well as some information on the test run itself. JMeter shows the number of warnings/errors found in jmeter.log file next to the warning icon (triangle) at the right hand end of its window. Click on the warning icon to show the jmeter.log file at the bottom of JMeter’s window. Just occasionally there may be some errors that JMeter is unable to trap and log; there will appear on the command console. If a test is not behaving as you expect, please check the log file in case any errors have been reported (e.g. perhaps a syntax error in a function call).
 
+Sampling errors(e.g. HTTP 404 - file not found) are not normally reported in the log file. Instead these are stored as attributes of the sample result. The status of a sample result can be seen in the various different Listeners.
 
 ## 3. Elements of a Test Plan
 
