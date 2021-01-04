@@ -278,9 +278,35 @@ Un*x script files; should work on most Linux/Unix systems:
 
 JMeter automatically finds classes from jars in the following directories:
 
+> JMETER_HOME/lib
 
+​		used for utility jars
+
+> JMETER_HOME/lib/ext
+
+​		used for JMeter components and plugins
+
+If you have developed new JMeter components, then you should jar them and copy the jar into JMeter’s `lib/ext` directory. JMeter will automatically find JMeter components in any jars found here. Do not use lib/ext for utility jars or dependency jars used by the plugins; it is only intended for JMeter components and plugins.
+
+If you don’t want to put JMeter plugin jars in the `lib/ext` directory, then define the properly `search_paths` in `jmeter.properties`.
+
+Utility and dependency jars (libraries etc) can be placed in the `lib` directory.
+
+If you don’t want to put such jars in the lib directory, then define the properly `user.classpath` or plugin_dependency_paths in `jmeter.properties`. See below for an explanation of the differences.
+
+Other jars (such as JDBC, JMS implementations and any other support libraries needed by the JMeter code) should be placed in the lib directory - not the lib/ext directory, or added to `user.classpath`.
+
+> JMeter will only find .jar files, not .zip
+
+You can also install utility Jar files in `$JAVA_HOME/jre/lib/ext`, or you can set the property `user.classpath` in `jmeter.properties`
+
+Note that setting the CLASSPATH environment variable will have no effect. This is because JMeter is started with `“java -jar”`, and the java command silently ignores the CLASSPATH variable, and the `-classpath/-cp` options when `-jar` is used.
+
+> This occurs with all Java programs, not just JMeter.
 
 #### 1.4.2 Create Test Plan from Template
+
+You have the ability to create a new Test Plan from existing template.
 
 
 
@@ -304,15 +330,19 @@ JMeter automatically finds classes from jars in the following directories:
 
 ## 2. Building a Test Plan
 
-Adding and Removing Elements
+A test plan describes a series of steps JMeter will execute when run. A complete test plan will consist of one or more Thread Groups, logic controllers, sample generating controllers, listeners, timers, assertions, and configuration elements.
 
 ### 2.1 Adding and Removing Elements
 
+Adding elements to a test plan can be done by right-clicking on an element in the tree, and choosing a new element from the “add” list. Alternatively, elements can be loaded from file and added by choosing the “merge” or “open” option.
 
+To remove an element, make sure the element is selected, right-click on the element, and choose the “remove” option.
 
 ### 2.2 Loading and Saving Elements
 
+To load an element from file, right click on the existing tree elements to which you want to add the loaded element, and select the “merge” option. Choose the file where your elements are saved. JMeter will merge the elements into the tree.
 
+To save tree elements, right click on an element and choose the “Save Selection As …” option. JMeter will save the element selected, plus all child elements beneath it. In this way, you can save test tree fragments and individual elements for later use.
 
 ### 2.3 Configuring Tree Elements
 
@@ -336,29 +366,110 @@ Adding and Removing Elements
 
 ## 3. Elements of a Test Plan
 
+This section describes the different parts of a test plan.
+
+A minimal test will consist of the Test Plan, a Thread Group and one more or more Samplers.
+
 ### 3.0 Test Plan
 
+The Test Plan object has a checkbox called “<u>Functional Testing</u>”. If selected, it will cause JMeter to record the data returned from the server for each sample. If you have selected a file in your test listeners, this data will be written to file. This  can be useful if you are doing a small run to ensure that JMeter is configured correctly, and that your server is returning the expected results. The consequence is that the file will grow huge quickly, and JMeter’ s performance will suffer. This option should be off if you are doing stress-testing (it is off by default).
 
+If you are not recording the data to file, this option makes no difference.
+
+You can also use the <u>Configuration</u> button on a listener to decide what fields to save.
 
 ### 3.1 Thread Group
 
+Thread group elements are the beginning points of any test plan. All controllers and samplers must be under a thread group. Other elements, e.g. Listeners, may be placed directly under the test plan, in which case they will apply to all the thread groups. As the name implies, the thread group element controls the number of threads JMeter will use to execute your test. The controls for a thread group allow you to:
 
+* Set the number of threads
+* Set the ramp-up period
+* Set the number of times to execute the test
+
+Each thread will execute the test plan in its entirety and completely independently of other test threads. Multiple threads are used to simulate concurrent connections to your server application.
+
+The ramp-up period tells JMeter how long to take to “ramp-up” to the full number of threads chosen. If 10 threads are used, and the ramp-up period is 100 seconds, then JMeter will take 100s seconds to get all 10 threads up and running. Each thread will start 10 (100/10) seconds after the previous thread was begun. If there are 30 threads and a ramp-up period of 120 seconds, then each successive thread will be delayed by 4 seconds.
+
+Ramp-up needs to be long enough to avoid too large work-load at the start of a test, and short enough that the last threads start running before the first ones finish(unless one wants that  to happen).
+
+Start with Ramp-up = number of threads and adjust up or down as needed.
+
+By default, the thread group is configured to loop once through its elements.
+
+Thread group also provides a **scheduler**. Click the checkbox at the bottom of the Thread Group panel to enable/disable extra fields in which you can enter the duration of test, the startup delay, the start and end times of the run. You can configure <u>Duration (seconds)</u> and <u>Startup Delay (seconds)</u> to control the duration of each thread group and the after how much seconds it starts. When the test is started, JMeter will wait <u>Startup Delay (seconds)</u> before starting the Threads of the Thread Group and run for the configured <u>Duration (seconds)</u> time. Note those 2 options override the <u>Start time</u> and <u>End time</u>.
+
+Alternatively (although not recommended as not very flexible) you can use the two other fields <u>Start time</u> and <u>End time</u>. When the test is started, JMeter will wait if necessary until the start-time has been reached. At the end of each cycle, JMeter checks if the end-time has been reached, and if so, the run is stopped, otherwise the test is allowed to continue until the iteration limit is reached.
 
 ### 3.2 Controllers
 
+JMeter has two types of Controllers: Samplers and Logical Controllers. These drive the processing of a test.
 
+Samplers tell JMeter to send requests to a server. For example, add an HTTP Request Sampler if you want JMeter to send an HTTP request. You can also customize a request by adding one or more Configuration Elements to a Sampler. For more information, see Samplers.
+
+Logical Controllers let you customize the logic that JMeter uses to decide when to send requests. For example, you can add an Interleave Logic Controller to alternate between two HTTP Request Samplers. For more information, see Logical Controllers.
 
 #### 3.2.1 Samplers
 
+Samplers tell JMeter to send requests to a server and wait for a response. They are processed in the order they appear in the tree. Controllers can be used to modify the number of repetitions of a sampler.
 
+JMeter samplers include:
+
+* FTP Request
+* HTTP Request(can be used for SOAP or REST Webservice also)
+* JDBC Request
+* Java object request
+* JMS request
+* JUnit Test request
+* LDAP Request
+* Mail request
+* OS Process request
+* TCP request
+
+Each samplers has several properties you can set. You can further customize a sampler by adding one or more Configuration Elements to the Test Plan.
+
+If you are going to send multiple requests of the same type (for example, HTTP request) to the same server, consider using a Defaults Configuration Element. Each controller has one or more Defaults elements.
+
+Remember to add a Listener to your test plan to view and/or store the results of your requests to disk.
+
+If you are interested in having JMeter perform basic validation on the response of your request, add an Assertion to the sampler. For example, in stress testing a web application, the server may return a successful “HTTP Response” code, but the page may have errors on it or may be missing sections. You could add assertions to check for certain HTML tags, common error strings, and so on. JMeter lets you create these assertions using regular expressions.
 
 #### 3.2.2 Logic Controllers
 
+Logic Controllers let you customize the logic that JMeter uses to decide when to send requests. Logic Controllers can change the order of requests coming from their child elements. They can modify the requests themselves, cause JMeter to repeat requests, etc.
 
+To understand the effect of Logic Controllers on a test plan, consider the following test tree:
+
+* Test Plan
+	* Thread Group
+		* Once Only Controller
+			* Login Request(an HTTP Request)
+		* Load Search Page(HTTP Sampler)
+		* Interleave Controller
+			* Search “A” (HTTP Sampler)
+			* Search “B” (HTTP Sampler)
+			* HTTP default request (Configuration Element)
+		* HTTP default request (Configuration Element)
+		* Cookie Manager(Configuration Element)
+
+The first thing about this test is that the login request will be executed only the first time through. Subsequent iterations will skip it. This is due to the effects of the Once Only Controller.
+
+After the login, the next Sampler loads the search page (imagine a web application where the user logs in, and then goes to a search page to do a search). This is just a simple request, not filtered through any Logic Controller.
+
+After loading the search page, we want to do a search. Actually, we want to do two different searches. However, we want to re-load the search page itself between each search. We could do this by having 4 simple HTTP request elements (load search, search “A”, load search, search “B”). Instead, we use the Interleave Controller which passes on one child request each time through the test. It keeps the ordering (i.e. it doesn’t pass one on at random, but “remembers” its place) of its child elements. Interleaving 2 child requests may be overkill, but there could easily have been 8, or 20 child requests.
+
+Note the HTTP Request Defaults that belongs to the Interleave Controller. Imagine that “Search A” and “Search B” share the same PATH info (an HTTP request specification includes domain, port, method, protocol, path, and arguments, plus other optional items). This makes sense - both are search requests, hitting the same back-end search engine (a servlet or cgi-script, let’ say). Rather than configure both HTTP Samplers with the same information in their PATH field, we can abstract that information out to a single Configuration Element. When the interleave Controller “passes on” requests from “Search A” or “Search B”, it will fill in the blanks with values from the HTTP default request Configuration Element. So, we leave the PATH field blank for those requests, and put that information into the Configuration Element. In this case, this is a minor benefit at best, but it demonstrates that feature.
+
+The next element in the tree is another HTTP default request, this time added to the Thread Group itself. The Thread Group has a built-in Logic Controller, and thus, it uses this Configuration Element exactly as described above. It fills in the blanks of any Request that passes through. It is extremely useful in web testing to leave the DOMAIN field blank in all your HTTP Sampler elements, and instead, put that information into an HTTP default request element, added to the Thread Group. By doing so, you can test your application on a different server simply by changing one field in your Test Plan. Otherwise, you’d have to edit each and every Sampler.
+
+The last element is a HTTP Cookie Manger. A Cookie Manager should be added to all web tests - otherwise JMeter will ignore cookies. By adding it at the Thread Group level, we ensure that all HTTP requests will share the same cookies.
+
+Logic Controllers can be combines to achieve various results. See the list of built-in Logic Controllers.
 
 #### 3.2.3 Test Fragments
 
+The Test Fragment element is a special type of controller that exists on the Test Plan tree at the same level as the Thread Group element. It is distinguished from a Thread Group in that it is not executed unless it is referenced by either a <u>Module Controller</u> or an <u>Include Controller</u>.
 
+This element is purely for code re-use within Test Plans
 
 ### 3.3 Listeners
 
