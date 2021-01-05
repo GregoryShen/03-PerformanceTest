@@ -18,7 +18,7 @@ Apache JMeter features include:
 
 * Easy correlation through ability to extract data from most popular response formats, HTML, JSON, XML or any textual format
 
-* Complete portablility and 100% Java purity.
+* Complete portability and 100% Java purity.
 
 * Full **multi-threading** framework allows concurrent sampling by many threads and simultaneous sampling of different functions by separate thread groups.
 
@@ -42,9 +42,9 @@ Apache JMeter features include:
 
 ## JMeter is not a browser
 
-JMeter is not a browser, it works at protocol level. As for as web-services and remote services are concerned, JMeter looks like a browser (or rather, multiple browsers); however JMeter does not perform all the actions suported by browsers. In particular, JMeter does not execute the Javascript found in HTML pages. Nor does it render the HTML pages as a browser does (it’s possible to view the response as HTML etc., but <u>the timings are not included in any samplers, and only one sample in one thread is ever displayed at a time</u>).
+JMeter is not a browser, it works at protocol level. As for as web-services and remote services are concerned, JMeter looks like a browser (or rather, multiple browsers); however JMeter does not perform all the actions supported by browsers. In particular, JMeter does not execute the JavaScript found in HTML pages. Nor does it render the HTML pages as a browser does (it’s possible to view the response as HTML etc., but <u>the timings are not included in any samplers, and only one sample in one thread is ever displayed at a time</u>).
 
-## Tuto
+## Tutorials
 
 # User’s Manual
 
@@ -153,7 +153,7 @@ You can rename the parent directory (i.e. apache-jmeter-X.Y) if you want, but do
 
 ### 1.4 Running JMeter
 
-To run JMeter, run the jmeter.bat (for Win) or jmeter (for Unix) file. These files are found in the `bin` directory. After a short time, the JMeter GUI should appear.
+To run JMeter, run the <u>jmeter.bat</u> (for Win) or <u>jmeter</u> (for Unix) file. These files are found in the `bin` directory. After a short time, the JMeter GUI should appear.
 
 There are some additional scripts in the <u>bin</u> directory that you may find useful. Windows script files (the .CMD files require Win2K or later):
 
@@ -274,7 +274,7 @@ Un*x script files; should work on most Linux/Unix systems:
 
 ​		Run the Shutdown client to stop a CLI mode 
 
-#### 1.4.1 JMeter’s Classpath
+#### 1.4.1 JMeter’ s Classpath
 
 JMeter automatically finds classes from jars in the following directories:
 
@@ -286,7 +286,7 @@ JMeter automatically finds classes from jars in the following directories:
 
 ​		used for JMeter components and plugins
 
-If you have developed new JMeter components, then you should jar them and copy the jar into JMeter’s `lib/ext` directory. JMeter will automatically find JMeter components in any jars found here. Do not use lib/ext for utility jars or dependency jars used by the plugins; it is only intended for JMeter components and plugins.
+If you have developed new JMeter components, then you should jar them and copy the jar into JMeter’ s `lib/ext` directory. JMeter will automatically find JMeter components in any jars found here. Do not use lib/ext for utility jars or dependency jars used by the plugins; it is only intended for JMeter components and plugins.
 
 If you don’t want to put JMeter plugin jars in the `lib/ext` directory, then define the properly `search_paths` in `jmeter.properties`.
 
@@ -456,9 +456,9 @@ To save tree elements, right click on an element and choose the “Save Selectio
 
 ### 2.3 Configuring Tree Elements
 
-Any element in the test tree will present controls in JMeter’s right-hand frame. These controls allow you to configure the behavior of that particular test element. What can be configured for an element depends on what type of element it is.
+Any element in the test tree will present controls in JMeter’ s right-hand frame. These controls allow you to configure the behavior of that particular test element. What can be configured for an element depends on what type of element it is.
 
-> The Test Tree itself can be manipulated by dragging and dropping components arount the test tree.
+> The Test Tree itself can be manipulated by dragging and dropping components around the test tree.
 
 ### 2.4 Saving the Test Plan
 
@@ -470,7 +470,7 @@ Although it is not required, we recommend that you save the Test Plan to a file 
 
 To run your test plan, choose “Start”(`Control` + `r`) from the “Run” menu item. When JMeter is running, it shows a small green box at the right hand end of the section just under the menu bar. You can also check the “Run” menu. If “Start” is disabled, and “Stop” is enabled, then JMeter is running your test plan (or, at least, it thinks it is).
 
-The numbers to the lef of the green box are the number of active threads/total number of threads. These only apply to a locally run test; they do not include any threads started on remote systems when using client-server mode.
+The numbers to the left of the green box are the number of active threads/total number of threads. These only apply to a locally run test; they do not include any threads started on remote systems when using client-server mode.
 
 > Using GUI mode as described here should only be used when debugging your Test Plan. To run the real load test, use CLI mode.
 
@@ -478,7 +478,7 @@ The numbers to the lef of the green box are the number of active threads/total n
 
 There are two types of stop command available from the menu:
 
-* `Stop`(`Control`+`.`) - stops the threads immediately if possible. Many samplers are Interruptiable which means that active samples can be terminated early. The stop command will check that all threads have stopped within the default timeout, which is 5000 ms = 5 seconds. [This can be changed using the JMeter property `jmeterengine.threadstop.wait`] if the threads have not stopped, then a message is displayed. The Stop command can be retried, but if it fails, then it is necessary to exit JMeter to clean up.
+* `Stop`(`Control`+`.`) - stops the threads immediately if possible. Many samplers are Interruptible which means that active samples can be terminated early. The stop command will check that all threads have stopped within the default timeout, which is 5000 ms = 5 seconds. [This can be changed using the JMeter property `jmeterengine.threadstop.wait`] if the threads have not stopped, then a message is displayed. The Stop command can be retried, but if it fails, then it is necessary to exit JMeter to clean up.
 * `Shutdown`(`Control` + `,`) - requests the threads to stop at the end of any current work. Will not interrupt any active samples. The modal shutdown dialog box will remain active until all threads have stopped.
 
 If Shutdown is taking too long. Close the Shutdown dialog box and select Run/Stop, or just press `Control` + `.`.
@@ -489,14 +489,14 @@ The chosen port is displayed in the console window.
 
 The commands currently supported are:
 
-* `Shutdown` - greacefu shutdown
+* `Shutdown` - greaceful shutdown
 * `StopTestNow` - immediate shutdown
 
 These commands can be sent by using the `shutdown[.cnd|.sh]` or `stoptest[.cmd|.sh]` script respectively. The scripts are to be found in the JMeter <u>bin</u> directory. The commands will only be accepted if the script is run from the same host.
 
 ### 2.7 Error reporting
 
-JMeter reports warnings and errors to the jmeter.log file, as well as some information on the test run itself. JMeter shows the number of warnings/errors found in jmeter.log file next to the warning icon (triangle) at the right hand end of its window. Click on the warning icon to show the jmeter.log file at the bottom of JMeter’s window. Just occasionally there may be some errors that JMeter is unable to trap and log; there will appear on the command console. If a test is not behaving as you expect, please check the log file in case any errors have been reported (e.g. perhaps a syntax error in a function call).
+JMeter reports warnings and errors to the `jmeter.log` file, as well as some information on the test run itself. JMeter shows the number of warnings/errors found in `jmeter.log` file next to the warning icon (triangle) at the right hand end of its window. Click on the warning icon to show the `jmeter.log` file at the bottom of JMeter’ s window. Just occasionally there may be some errors that JMeter is unable to trap and log; there will appear on the command console. If a test is not behaving as you expect, please check the log file in case any errors have been reported (e.g. perhaps a syntax error in a function call).
 
 Sampling errors(e.g. HTTP 404 - file not found) are not normally reported in the log file. Instead these are stored as attributes of the sample result. The status of a sample result can be seen in the various different Listeners.
 
@@ -609,43 +609,196 @@ This element is purely for code re-use within Test Plans
 
 ### 3.3 Listeners
 
+Listeners provide access to the information JMeter gathers about the test cases while JMeter runs. The <u>Graph Results</u> listener plots the response times on a graph. The “View Results Tree” Listeners shows details of sampler requests and responses, and can display basic HTML and XML representations of the response. Other listeners provide summary or aggregation information.
 
+ Additionally, listeners can direct the data to a file for later use. Every listener in JMeter provides a field to indicate the file to store data to. There is also a Configuration button which can be used to choose which fields to save, and whether to use CSV or XML format.
+
+> Note that all listeners save the same data; the only difference is in the way the data is presented on the screen.
+
+Listeners can be added anywhere in the test, including directly under the test plan. They will collect data only from elements at or below their level.
+
+There are several listeners that come with JMeter.
 
 ### 3.4 Timers
 
+By default, a JMeter thread executes samplers in sequence without pausing. We recommend that you specify a delay by adding one of the available timers to your Thread Group. If you do not add a delay, JMeter could overwhelm your server my making too many requests in a very short amount of time.
 
+A timer will cause JMeter to delay a certain amount of time before each sampler which is in its scope.
+
+If you choose to add more than one timer to a Thread Group, JMeter takes the sum of the timers and pauses for that amount of time before executing the samplers to which the timers apply. Timers can be added as children of samplers or controllers in order to restrict the samplers to which they are applied.
+
+To provide a pause at a single place in a test plan, one can use the Flow Control Action Sampler.
 
 ### 3.5 Assertions
 
+Assertions allow you to assert facts about responses received from the server being tested. Using an assertion, you can essentially “test” that your application is returning the results you expect it to.
 
+For instance, you can assert that the response to a query will contain some particular text. The text you specify can be a Perl-style regular expression, and you can indicate that the response is to contain the text, or that it should match the whole response.
+
+You can add an assertion to any Sampler. For example, you can add an assertion to a HTTP Request that checks for the text, “</HTML>”. JMeter will then check that the text is present in the HTTP response. If JMeter cannot find the text, then it will mark this as a failed requeset.
+
+> Note that assertions apply to all samplers which are in their scope. To restrict an assertion to a single sampler, add the assertion as a child of the sampler.
+
+To view assertion results, add an Assertion Listener to the Thread Group. Failed Assertions will also show up in the Tree View and Table Listeners, and will count towards the error % age for example in the Aggregate and Summary reports.
 
 ### 3.6 Configuration Elements
 
+A configuration element works closely with a Sampler. Although it doe not send requests (except for <u>HTTP(s) Test Script Recorder</u>), it can add to or modify requests.
 
+A configuration element is accessible from only inside the tree branch where you place the element. For example, if you place an HTTP Cookie Manager inside a Simple Logic Controller, the Cookie Manger will only be accessible to HTTP Request Controllers you place inside the Simple Logic Controller. The Cookie Manager is accessible to the HTTP requests “Web Page 1” and “Web Page 2”, but not “Web Page 3”.
+
+Also, a configuration element inside a tree branch has higher precedence than the same element in a “parent” branch. For example, we defined two HTTP Request Defaults elements, “Web Defaults 1” and “Web Defaults 2”. Since we placed  “Web Defaults 1” inside a Loop Controller, only “Web Page 2” can access it. The other HTTP requests will use “Web Defaults 2”, since we placed it in the Thread Group (the “parent” of all other branches).
+
+> The <u>User Defined Variables</u> Configuration element is different. It is processed at the start of a test, no matter where it is placed. For simplicity, it is suggested that the element is placed only at the start of a Thread Group.
 
 ### 3.7 Pre-Processor Elements
 
-
+A Pre-Processor executes some action prior to a Sampler Request being made. If a Pre-Processor is attached to a Sampler element, then it will execute just prior to that sampler element running. A Pre-Processor is most often used to modify the settings of a Sample Request just before it runs, or to update variables that aren’t extracted from response text. See the <u>scoping rules</u> for more details on when Pre-Processors are executed.
 
 ### 3.8 Post-Processor Elements
 
-
+A Post-Processor executes some action after a Sampler Request has been made. If a Post-Processor is attached to a Sampler element, then it will execute just after that sampler element runs. A Post-Processor is most often used to process the response data, often to extract values from it. See the scoping rules for more details on when Post-Processors are executed.
 
 ### 3.9 Execution order
 
+0. Configuration elements
+1. Pre-Processors
+2. Timers
+3. Sampler
+4. Post-Processors(unless SampleResult is null)
+5. Assertions (unless SampleResult is null)
+6. Listeners (unless SampleResult is null)
 
+> Please note that Timers, Assertions, Pre- and Post-Processors are only processed if there is a sampler to which they apply. Logic Controllers and Samplers are processed in the order in which they appear in the tree. Other test elements are processed according to the scope in which they are found, and the type of test element.  [Within a type, elements are processed in the order in which they appear in the tree].
+
+For example, in the following test plan:
+
+* Controller
+	* Post-Processor 1
+	* Sampler 1
+	* Sampler 2
+	* Timer 1
+	* Assertion 1
+	* Pre-Processor 1
+	* Timer 2
+	* Post-Processor 2
+
+The order of execution would be:
+
+```shell
+Pre-Processor 1
+Timer 1
+Timer 2
+Sampler 1
+Post-Processor 1
+Post-Processor 2
+Assertion 1
+
+Pre-Processor 1
+Timer 1
+Timer 2
+Sampler 2
+Post-Processor 1
+Post-Processor 2
+Assertion 1
+```
 
 ### 3.10 Scoping Rules
 
+The JMeter test tree contains elements that are both hierarchical and ordered. Some elements in the test trees are strictly hierarchical (Listeners, Config Elements, Post-Processors, Pre-Processors, Assertions, Timers), and some are primarily ordered (controllers, samplers). When you create your test plan, you will create an ordered list of sample request (via Samplers) that represent a set of steps to be executed. These requests are often organized within controllers that are also ordered. Given the following test tree:
 
+JMeter test tree中包含的元素都是分级且有序的。有些元素，比如Listener, Config, Post-Processors, Pre
+
+* Test Plan
+	* Thread Group
+		* one
+		* Simple Controller
+			* Two
+			* Three
+		* Four
+
+The order of requests will be, One, Two, Three, Four.
+
+Some controllers affect the order of their subelements, and you can read about these specific controllers in the component reference.
+
+Other elements are hierarchical. An Assertion, for instance, is hierarchical in the test tree. If its parent is a request, then it is applied to that request. If its parent is a Controller, then it affects all requests that are descendants of that Controller. In the following test tree:
+
+* Test Plan
+	* Thread Group
+		* One
+			* Assertion #1
+		* Simple Controller
+			* Two
+			* Three
+			* Assertion #2
+		* Four
+
+Assertion #1 is applied only to Request One, while Assertion #2 is applied to Requests Two and Three.
+
+Another example, this time using Timers:
+
+* Test Plan
+	* Thread Group
+		* One
+		* Simple Controller
+			* Two
+			* Timer #1
+			* Three
+				* Assertion #1
+			* Simple Controller
+				* Four
+		* Five
+		* Timer #2
+
+In this example, the requests are named to reflect the order in which they will be executed. Timer #1 will apply to Requests Two, Three, and Four (notice how order is irrelevant for hierarchical elements). Assertion #1 will apply only to Request Three. Timer #2 will affect all the requests.
+
+Hopefully these examples make it clear how configuration (hierarchical) elements are applied. If you imagine each Request being passed up the tree branches, to its parent, then to its parent’s parent, etc., and each time collecting all the configuration elements of that parent, then you will see how it works.
+
+> The Configuration elements Header Manager, Cookie Manager and Authorization manager are treated differently from the Configuration Default elements. The settings from the Configuration Default elements are merged into a set of values that the Sampler has access to. However, the settings from the Managers are not merged. If more than one Manager is in the scope of a Sampler, only one Manager is used, but there is currently no way to specify which is used.
 
 ### 3.11 Properties and Variables
 
+JMeter *properties* are defined in `jmeter.properties` .
 
+Properties are global to jmeter, and are mostly used to define some of the defaults JMeter uses. For example the property `remote_hosts` defines the servers that JMeter will try to run remotely. Properties can be referenced in test plans - but cannot be used for thread-specific values.
+
+JMeter *variables* are local to each thread. The values may be the same for each thread, or they may be different.
+
+If a variable is updated by a thread, only the thread copy of the variable is changed. For example the Regular Expression Extractor Post-Processor will set its variables according to the sample that its thread has read, and these can be used later by the same thread. For details of how to reference variables and functions, see Functions and Variables
+
+Note that the values defined by the <u>Test Plan</u> and the <u>User Defined Variables</u> configuration element are made available to the whole test plan at startup. If the same variable is defined by multiple UDV elements, then the last one takes effect. Once a thread has started, the initial set of variables is copied to each thread. Other elements such as the <u>User Parameters</u> Pre-Processor or <u>Regular Expression Extractor</u> Post-Processor may be used to redefine the same variables (or create new ones). These redefinitions only apply to the current thread.
+
+The `setProperty` function can be used to define a JMeter property. These are global to the test plan, so can be used to pass information between threads - should that be needed.
+
+> Both variables and properties are case-sensitive.
 
 ### 3.12 Using Variables to parameterize tests
 
+Variables don’t have to vary - they can be defined once, and if left alone, will not change value. So you can use them as short-hand for expressions that appear frequently in a test plan. Or for items which are constant during a run, but which may vary between runs. For example, the name of a host, or the number of threads in a thread group.
 
+When deciding how to structure a Test Plan, make a note of which items are constant for the run, but which may change between runs. Decide on some variable names for these - perhaps use a naming convention such as prefixing them with `C_` or `K_` or using uppercase only to distinguish them from variables that need to change during the test. Also consider which items need to be local to a thread - for example counters or values extracted with the Regular Expression Post-Processor. You may wish to use a different naming convention for these.
+
+For example, you might define the following on the Test Plan:
+
+```shell
+HOST			www.example.com
+THREADS			10
+LOOPS			20
+```
+
+You can refer to these in the test plan as `${HOST}` `${THREADS}` etc. if you later want to change the host, just change the value of the HOST variable. This works fine for small numbers of tests, but becomes tedious when testing lots of different combinations. One solution is to use a property to define the value of the variables, for example:
+
+```shell
+HOST			${__p(host,www.example.com)}
+THREADS			${__P(threads,10)}
+LOOPS			${__P(loops,20)}
+```
+
+You can then change some or all of the values on the command-line as follows:
+
+```shell
+jmeter ... -Jhost=www3.example.org -Jloops=13
+```
 
 ## 4. Building a Web Test Plan
 
