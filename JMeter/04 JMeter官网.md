@@ -157,11 +157,11 @@ To run JMeter, run the <u>jmeter.bat</u> (for Win) or <u>jmeter</u> (for Unix) f
 
 There are some additional scripts in the <u>bin</u> directory that you may find useful. Windows script files (the .CMD files require Win2K or later):
 
-> jmeter.bat
+> ==jmeter.bat==
 
 ​		run JMeter (in GUI mode by default)
 
-> jmeterw.cmd
+> ==jmeterw.cmd==
 
 ​		run JMeter without the windows shell console (in GUI mode by default)
 
@@ -250,7 +250,7 @@ jmeter -t test.jmx ...
 
 Un*x script files; should work on most Linux/Unix systems:
 
-> jmeter
+> ==jmeter==
 
 ​		run JMeter (in GUI mode by default). Defines some JVM settings which may not work for all JVMs.
 
@@ -300,7 +300,7 @@ Other jars (such as JDBC, JMS implementations and any other support libraries ne
 
 You can also install utility Jar files in `$JAVA_HOME/jre/lib/ext`, or you can set the property `user.classpath` in `jmeter.properties`
 
-Note that setting the CLASSPATH environment variable will have no effect. This is because JMeter is started with `“java -jar”`, and the java command silently ignores the CLASSPATH variable, and the `-classpath/-cp` options when `-jar` is used.
+Note that setting the `CLASSPATH` environment variable will have no effect. This is because JMeter is started with `“java -jar”`, and the java command silently ignores the `CLASSPATH` variable, and the `-classpath/-cp` options when `-jar` is used.
 
 > This occurs with all Java programs, not just JMeter.
 
@@ -308,7 +308,15 @@ Note that setting the CLASSPATH environment variable will have no effect. This i
 
 You have the ability to create a new Test Plan from existing template.
 
+To do so you use the menu File → Templates … or Templates icon:
 
+A popup appears, you can then choose a template among the list:
+
+Some templates may need parameters input from the user. For these ones, after a click on the create button, a new window will appear as follow:
+
+When you are done with parameters, click on the <u>Validate</u> button and the template will be created.
+
+A documentation for each template explains what to do once test plan is created from template.
 
 #### 1.4.3 Using JMeter behind a proxy
 
@@ -320,15 +328,32 @@ For load testing, you must run JMeter in this mode (without the GUI) to get the 
 
 `-n`
 
-​		This specifies JMeter is to run in cli mode
+​		==This specifies JMeter is to run in cli mode==
 
 `-t`
 
-​		[name of JMX file that contains the Test Plan]
+​		==[name of JMX file that contains the Test Plan]==
 
 `-l`
 
 ​		[name of JTL file to log sample results to]
+
+> What are JTL files?
+>
+> ​		JMeter can create text files containing the results of a test run.
+>
+> ​		These are normally called JTL files, as that is the default extension - but any extension can be used.
+>
+> Types of JTL file
+>
+> There are currently two types of JTL file:
+>
+> 	1. XML
+>  	2. CSV (with and without header)
+>
+> The XML files can contain more types of information, but are considerably larger.
+>
+> more info: https://cwiki.apache.org/confluence/display/JMETER/JtlFiles
 
 `-j`
 
@@ -348,7 +373,7 @@ For load testing, you must run JMeter in this mode (without the GUI) to get the 
 
 `-e`
 
-​		generate report dashboard after load test
+​		==generate report dashboard after load test==
 
 `-o`
 
@@ -374,7 +399,7 @@ If the property `jmeterengine.stopfail.system.exit` is set to `true` (default is
 
 #### 1.4.5 Server Mode
 
-For distributed testing, run JMeter in server mode on the remote node(s), and then control the server(s) from   the GUI. You can also use CLI mode to run remote tests. To start the server(s), run `jmeter-server[.bat]` on each server host.
+For <u>distributed testing</u>, run JMeter in server mode on the remote node(s), and then control the server(s) from   the GUI. You can also use CLI mode to run remote tests. To start the server(s), run `jmeter-server[.bat]` on each server host.
 
 The script also lets you specify the optional firewall/proxy server information.
 
@@ -442,9 +467,11 @@ If the property `jmeterengine.remote.system.exit` is set to `true` (default is `
 
 A test plan describes a series of steps JMeter will execute when run. A complete test plan will consist of one or more Thread Groups, logic controllers, sample generating controllers, listeners, timers, assertions, and configuration elements.
 
+一个完整的测试计划应当包含一个或多个线程组, 逻辑控制器, sample generating controllers, 监听器, timers, 断言和配置元件.
+
 ### 2.1 Adding and Removing Elements
 
-Adding elements to a test plan can be done by right-clicking on an element in the tree, and choosing a new element from the “add” list. Alternatively, elements can be loaded from file and added by choosing the “merge” or “open” option.
+Adding <u>elements to a test plan</u> can be done by right-clicking on an element in the tree, and choosing a new element from the “add” list. Alternatively, elements can be loaded from file and added by choosing the “merge” or “open” option.
 
 To remove an element, make sure the element is selected, right-click on the element, and choose the “remove” option.
 
