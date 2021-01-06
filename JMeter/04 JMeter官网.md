@@ -449,9 +449,54 @@ If the property `jmeterengine.remote.system.exit` is set to `true` (default is `
 
 #### 1.4.7 Logging and error messages
 
+> Since 3.2, JMeter logging is not configured through properties files(s) such as `jmeter.properties` any more, but it is configured through a <u>Apache Log4j 2</u> configuration file (`log4j2.xml` in the directory from which JMeter was launched, by default) instead. Also, every code including JMeter and plugins MUST use SLF4J library to leave logs since 3.2
+
+Here is an example `log4j2.xml` file which defines two log appenders and loggers for each category.
+
+```xml
+<Configuration status="WARN" packages="org.apache.jmeter.gui.logging">
+	
+    <Appenders>
+    	<!-- The main log file appender to jmeter.log in the directory from which JMeter was launched, by default. -->
+        <File name="jmeter-log" fileName="${sys:jmeter.logfile:-jmeter.log}" append="false">
+        	<PatternLayout>
+            	<pattern>%d %p %c{1.}: %m%n</pattern>
+            </PatternLayout>
+        </File>
+        
+        <!-- Log appender for GUI log Viewer. See below. -->
+        <GuiLogEvent name="gui-log-event">
+            <PatternLayout>
+            	<pattern>%d %p %c{1.}: %m%n</pattern>
+            </PatternLayout>
+        </GuiLogEvent>
+    </Appenders>
+    
+    <Loggers>
+    	
+        <!-- Root logger -->
+        <Root level="info">
+        	<AppenderRef ref="jmeter-log" />
+            <AppenderRef ref="gui-log-event" />
+        </Root>
+        
+        <!-- SNIP -->
+        
+    </Loggers>
+</Configuration>
+```
+
+
+
 
 
 #### 1.4.8 Full list of command-line options
+
+Invoking JMeter as “jmeter -?” will print a list of all the command-line options. These are shown below.
+
+```shell
+
+```
 
 
 
@@ -829,11 +874,49 @@ jmeter ... -Jhost=www3.example.org -Jloops=13
 
 ## 4. Building a Web Test Plan
 
+In this section, you will learn how to create a basic <u>Test Plan</u> to test a Web site. You will create five users that send requests to two pages on the JMeter Website. Also, you will tell the users to run their tests twice. So, the total number of requests is (5 users) x (2 requests) x (repeat 2 times) = 20 HTTP requests. To construct the Test Plan, you will use the following elements: <u>Thread Group</u>, <u>HTTP Request</u>, <u>HTTP Request Defaults</u>, and <u>Graph Results</u>.
+
 ### 4.1 Adding Users
 
+The first step you want to do with every JMeter Test Plan is add a <u>Thread Group</u> element. ==The Thread Group tells JMeter <u>the number of users you want to simulate</u>, <u>how often the users should send requests</u>, and <u>how many requests they should send</u>.==
 
+线程组会告诉JMeter你想要模拟的用户数，用户发送请求的频率，以及最终一共发送多少请求。
+
+Go ahead and add the ThreadGroup element by first selecting the Test Plan, clicking your right mouse button to get the Add menu, and then select Add -> ThreadGroup.
+
+You should now see the Thread Group element under Test Plan. If you do not see the element, then “expand” the Test Plan tree by clicking on the Test Plan element.
+
+Next, you need to modify the default properties. Select the Thread Group element in the tree, if you have not already selected it. You should now see the Thread Group Control Panel in the right section of the JMeter window.
+
+![](https://jmeter.apache.org/images/screenshots/webtest/threadgroup.png)
+
+Starting by providing a more descriptive name for our Thread Group. In the name field, enter JMeter Users.
+
+Next, increase the number of users (called threads) to 5
+
+In the next field, the Ramp-Up Period, leave the default value of 1 seconds. This property tells JMeter how long to delay between starting each other. For example, if you enter a Ramp-Up Period of 5 seconds, JMeter will finish starting all of your users by the end of the 5 seconds. So, if we have 5 users and a 5 second Ramp-Up Period, then the delay between starting users would be 1 second (5 users / 5 seconds = 1 user per second). ==If you set the value to 0, then JMeter will immediately start all of your users.==
+
+Finally enter a value of 2 in the Loop Count field. This property tells JMeter how many times to repeat your test. If you enter a loop count value of 1, then JMeter will run your test only once. To have JMeter repeatedly  run our Test Plan, select the Forever checkbox.
+
+> In most applications, you have to manually accept changes you make in a Control Panel. However, in JMeter, the Control Panel automatically accepts your changes as you make them. If you change the name of an element, the tree will be updated with the new text after you leave the Control Panel (for example, when selecting another tree element).
+
+See Figure 4.2 for the completed JMeter Users Thread Group.
+
+![](https://jmeter.apache.org/images/screenshots/webtest/threadgroup2.png)
 
 ### 4.2 Adding Default HTTP Request Properties
+
+Now that we have defined our users, it is time to define the tasks that they will be performing. In this section, you will specify the default settings for your HTTP requests. And then, in section 4.3 , you will add HTTP Request elements which use some of the default settings you specified here.
+
+Begin by selecting the JMeter Users(Thread Group) element. Click your right mouse button to get the Add menu, and then select Add -> Config Element -> HTTP Request Defaults. Then select this new element to view its Control Panel
+
+Like most JMeter elements, the HTTP Request Defaults Control Panel has a name field that you can modify. In this example, leave this field with the default value.
+
+Skip to the next field, which is the Web Server’s Server Name/IP. For the Test Plan that you are building, all HTTP requests will be sent to the same Web server, `jmeter.apache.org`. Enter this domain name into the field. This is the only field that we will specify a default, so leave the remaining fields with their default values.
+
+> The HTTP Request Defaults element does not tell JMeter to send an HTTP request. It simply defines the default values that the HTTP Request elements use.
+
+![](https://jmeter.apache.org/images/screenshots/webtest/http-defaults2.png)
 
 
 
@@ -1133,6 +1216,36 @@ Well, Perl might be a very good choice except that the Benchmark package seems t
 C, of course, is a very good choice(check out the Apache ab tool). But be prepared to write all of the custom networking, threading, and state management code that you will need to benchmark you application.
 
 Java gives you (for free) the custom networking, threading, and state management code that you will need to benchmark your application. Java is aware of HTTP, FTP, and HTTPS - as well as RMI, IIOP, and JDBC (not to mention cookies, URL-encoding, and URL-rewriting). In addition Java gives you automatic garbage-collection, and byte-code level security.
+
+## 18 Component Reference
+
+### 18.1 Samplers
+
+#### HTTP Request
+
+
+
+### 18.2 Logic Controllers
+
+### 18.3 Listeners
+
+#### Graph Results
+
+### 18.4 Configuration Elements
+
+#### HTTP Cookie Manager
+
+#### HTTP Request Defaults
+
+### 18.5 Assertions
+
+### 18.6 Timers
+
+### 18.7 Pre Processors
+
+### 18.8 Post-Processors
+
+### 18.9 Miscellaneous Features
 
 
 
