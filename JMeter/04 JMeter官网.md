@@ -960,17 +960,67 @@ When creating a Test Plan, on each Thread Group iteration, we can choose to simu
 
 If your web application uses URL rewriting rather than cookies to save session information, then you’ll need to do a bit of extra work to test your site.
 
-To respond correctly to URL rewriting, JMeter needs to parse the HTML received from the server and retrieve the unique session ID. Use the appropriate HTTP URL Re-writing Modifier to accomplish this.
+To respond correctly to URL rewriting, JMeter needs to parse the HTML received from the server and retrieve the unique session ID. Use the appropriate <u>HTTP URL Re-writing Modifier</u> to accomplish this. Simply enter the name of your session ID parameter into the modifier, and it will find it and add it to each request. If the request already has a value, it will be replaced. If “Cache Session id?” is checked, then the last found session id will be saved, and will be used if the previous HTTP sample does not contain a session id.
+
+
 
 ### 5.2 Using a Header Manager
 
+The <u>HTTP Header Manager</u> lets you customize what information JMeter sends in the HTTP request header. This header includes properties like “User-Agent”, “Pragma”, “Referer”, etc.
 
+The <u>HTTP Header Manager</u>, like the <u>HTTP Cookie Manager</u>, should probably be added at the Thread Group level, unless for some reason you wish to specify different headers for the different <u>HTTP Request</u> objects in your test.
 
 Building a Database Test Plan
 
 ## 12. Introduction to listeners
 
-A listener is a component that shows the results of the samples. The results can be shown in a tree, tables, graphs or simply written to a log file. To view the contents of a response from any given sampler, add either of the Listeners “View Results Tree” or “View Results in table” to a test plan. To view the reponse time graphically, add graph results. 
+A listener is a component that shows the results of the samples. The results can be shown in a tree, tables, graphs or simply written to a log file. To view the contents of a response from any given sampler, add either of the Listeners “View Results Tree” or “View Results in table” to a test plan. To view the response time graphically, add graph results. The listeners section of the components page has full descriptions of all the listeners.
+
+> Different listeners display the response information in different ways. However, they all write the same raw data to the output file - if one is specified.
+
+The “Configure” button can be used to specify which fields to write to the file, and whether to write it as CSV or XML. CSV files are much smaller than XML files, so use CSV if you are generating lots of samples.
+
+The file name can be specified using either a relative or an absolute path name. Relative paths are resolved relative to the current working directory (which defaults to the bin/ directory). JMeter also supports paths relative to the directory containing the current test plan (JMX file). If the path name begins with “~/” (or whatever is in the `jmeter.save.saveservice.base_prefix` JMeter property), then the path is assumed to be relative to the JMX file location.
+
+If you only wish to record certain samples, add the Listener as a child of the sampler. Or you can use a Simple Controller to group a set of samplers, and add the Listener to that. The same filename can be used by multiple samplers - but make sure they all use the same configuration!
+
+### 12.1 Default Configuration
+
+The default items to be saved can be defined in the jmeter.properties (or use.properties) file. The properties are used as the initial settings for the Listener Config pop-up, and are also used for the log file specified by the `-l` command-line flag(commonly used for CLI mode test runs).
+
+To change the default format, find the following line in jmeter.properties:
+
+```shell
+jmeter.save.saveservice.output_format=
+```
+
+
+
+#### 12.1.1 Sample Variables
+
+#### 12.1.2 Sample Result Save Configuraion
+
+### 12.2 CLI mode (batch) test runs
+
+### 12.3 Resource usage
+
+### 12.4 CSV Log format
+
+### 12.5 XML Log format 2.1
+
+### 12.6 XML Log format 2.2
+
+### 12.7 Sample Attributes
+
+### 12.8 Saving response data
+
+### 12.9 Loading(reading) response data
+
+### 12.10 Saving Listener GUI data
+
+
+
+
 
 ## 13. Remote Testing
 
@@ -1003,7 +1053,13 @@ The dashboard generator is a modular extension of JMeter. Its default behavior i
 This report provides the following metrics:
 
 * APDEX (Application Performance Index) table that computes for every transaction the APDEX based on configurable values for tolerated and satisfied thresholds
-* A 
+* A request summary graph showing the Success and failed requests (Transaction Controller Sample Results are not taken into account) percentage:
+* A Statistics table providing in one table a summary of all metrics per transaction including 3 configurable percentiles:
+* An error table providing a summary of all errors and their proportion in the total requests”
+* A Top 5 Errors by Sampler table providing for every Sampler (excluding Transaction Controller by default) the top 5 Errors:
+* Zoomable chart where you can check/uncheck every transaction to show/hide it for:
+	* Response times Over Time (includes Transaction Controller Sample Results):
+	* 
 
 ### 14.2 Configuring Dashboard Generation
 
@@ -1087,23 +1143,27 @@ Real time Results
 
 ### 16.1 Always use latest version of JMeter
 
+The performance of JMeter is being constantly improved, so users are highly encouraged to use the most up to date version.
 
+Ensure you always read changes list to be aware of new improvements and components. You should absolutely avoid using versions that are older than 3 versions before the last one.
 
 ### 16.2 Use the correct Number of Threads
 
+Your hardware capabilities as well as the Test Plan design will both impact the number of threads you can effectively run with JMeter. The number will also depend on how fast your server is (a faster server makes JMeter work harder since it returns a response quicker). As with any Load Testing tool, if you don’t correctly size the number of threads, you will face the “Coordinated Omission” problem which can give you wrong or inaccurate results. If you need large-scale load testing, consider running multiple CLI JMeter instances on multiple machines using distributed mode (or not). When using distributed mode the result file is combined on the Controller node, if using multiple autonomous instances, the sample result files can be combined for subsequent analysis. For testing how JMeter performs on a given platform, the Java Test sampler can be used. It does not require any network access so can give some idea as to the maximum throughput achievable.
 
+JMeter has an option to delay thread creation until the thread starts sampling, i.e. after any thread group delay and the ramp-up time for the thread itself. This allows for a very large total number of threads, provided that not too many are active concurrently.
 
 ### 16.3 Where to Put the Cookie Manager
 
-
+See Building a Web Test for information.
 
 ### 16.4 Where to Put the Authorization Manager
 
-
+See Building an Advanced Web Test for information.
 
 ### 16.5 Using the HTTP(S) Test Script Recorder
 
-
+Refer to HTTP(S) Test Script Recorder for details on setting up the recorder. The most important thing to do is filter out all requests you aren’t interested in. For instance, there’s no point in recording image requests(JMeter can be instructed to download all images on a page). These will just clutter your test plan. Most likely, these is an extension all your files share, such as .jsp, .asp, .php, .html or the like. These you should “include” by entering “`.*\.jsp*`” as an “Include Pattern”.
 
 ### 16.6 User variables
 
