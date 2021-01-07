@@ -349,7 +349,7 @@ For load testing, you must run JMeter in this mode (without the GUI) to get the 
 > There are currently two types of JTL file:
 >
 > 	1. XML
->  	2. CSV (with and without header)
+> 	2. CSV (with and without header)
 >
 > The XML files can contain more types of information, but are considerably larger.
 >
@@ -922,35 +922,55 @@ Skip to the next field, which is the Web Server’s Server Name/IP. For the Test
 
 ### 4.3 Adding Cookie Support
 
+Nearly all web testing should use cookie support, unless your application specifically doesn’t use cookies. To add cookie support, simply add an HTTP Cookie Manager to each Thread Group in your test plan. This will ensure that each thread gets its own cookies, but shared across all HTTP Request objects.
 
+几乎所有的Web测试都应该使用cookie支持, 除非你的应用指明不使用cookie. 使用cookie支持的方法是: 在每个线程组里都添加一个HTTP Cookie Manager. 这样每个线程就能有自己的cookies, 而且每个HTTP 请求都可以共享cookies.
 
 ### 4.4 Adding HTTP Requests
 
-
+> JMeter sends requests in the order that they appear in the tree.
+>
+> JMeter 是根据请求在树中出现的顺序来发送的.
 
 ### 4.5 Adding a Listener to View Store the Test Results
 
+The final element you need to add to your Test Plan is a Listener. This element is responsible for storing all of the results of your HTTP requests in a file and presenting a visual model of the data.
 
+最后需要添加到Test Plan的元件是监听器. 这个元件负责把所有HTTP请求的返回结果存储到文件中, 并且把结果按模型的方式展示出来.
+
+Select the JMeter Users element and add Graph Results listener
 
 ### 4.6 Logging in to a web-site
 
+It’s not the case here, but some websites require you to login before permitting you to perform certain actions. In a web-browser, the login will be shown as a form for the user name and password, and a button to submit the form. The button generates a POST request, passing the values of the form items as parameters.
 
+To do this in JMeter, add a HTTP Request, and set the method to POST. You’ll need to know the names of the fields used by the form, and the target page. These can be found out by inspecting the code of the login page. [If this is difficult to do, you can use the <u>JMeter Proxy Recorder</u> to record the login sequence.] ==Set the path to the target of the submit button==. Click the Add button twice and enter the username and password details. Sometimes the login form contains additional hidden fields. These will need to be added as well.
+
+登录页面的路径要设为提交按钮的路径.如果提交表单还有其他隐藏字段的话, 也需要加上.
 
 ### 4.7 choose the same user or different users
 
+When creating a Test Plan, on each Thread Group iteration, we can choose to simulate the same user running multiple iterations, or different users running one iteration. You can configure this behaviour on Thread Group element, and have HTTP Cache Manager, HTTP Cookie Manager, HTTP Authorization Manager controlled by this setting.
 
+当创建一个Test Plan时, 在每个Thread Group循环的时候, 我们可以选择同一批用户反复循环, 还是不同用户跑一个循环. 
 
 ## 5. Building an Advanced Web Test Plan
 
 ### 5.1 Handling User Sessions With URL Rewriting
 
+If your web application uses URL rewriting rather than cookies to save session information, then you’ll need to do a bit of extra work to test your site.
 
+To respond correctly to URL rewriting, JMeter needs to parse the HTML received from the server and retrieve the unique session ID. Use the appropriate HTTP URL Re-writing Modifier to accomplish this.
 
 ### 5.2 Using a Header Manager
 
 
 
 Building a Database Test Plan
+
+## 12. Introduction to listeners
+
+A listener is a component that shows the results of the samples. The results can be shown in a tree, tables, graphs or simply written to a log file. To view the contents of a response from any given sampler, add either of the Listeners “View Results Tree” or “View Results in table” to a test plan. To view the reponse time graphically, add graph results. 
 
 ## 13. Remote Testing
 
@@ -972,9 +992,18 @@ Building a Database Test Plan
 
 ## 14. Dashboard Report
 
+JMeter supports dashboard report generation to get graphs and statistics from a test plan.
+
+This chapter describes how to configure and use the generator.
+
 ### 14.1 Overview
 
+The dashboard generator is a modular extension of JMeter. Its default behavior is to read and process samples from CSV files to generate HTML files containing graph views. It can generate the report at end of a load test or on demand.
 
+This report provides the following metrics:
+
+* APDEX (Application Performance Index) table that computes for every transaction the APDEX based on configurable values for tolerated and satisfied thresholds
+* A 
 
 ### 14.2 Configuring Dashboard Generation
 
@@ -1217,7 +1246,7 @@ C, of course, is a very good choice(check out the Apache ab tool). But be prepar
 
 Java gives you (for free) the custom networking, threading, and state management code that you will need to benchmark your application. Java is aware of HTTP, FTP, and HTTPS - as well as RMI, IIOP, and JDBC (not to mention cookies, URL-encoding, and URL-rewriting). In addition Java gives you automatic garbage-collection, and byte-code level security.
 
-## 18 Component Reference
+## 18. Component Reference
 
 ### 18.1 Samplers
 
@@ -1231,6 +1260,16 @@ Java gives you (for free) the custom networking, threading, and state management
 
 #### Graph Results
 
+> Graph Results MUST NOT BE USED during load test as it consumes a lot of resources (memory and CPU). Use it only for either functional testing or during Test Plan debugging and Validation.
+
+The Graph Results listener generates a simple graph that plots all sample times. Along the bottom of the graph, the current sample(black), the current average of all samples (blue), the current standard deviation (red), and the current throughput rate (green) are displayed in milliseconds.
+
+The throughput number represents the actual number of requests/minute the server handled. This calculation includes any delays you added to your test and JMeter’s own internal processing time. The advantage of doing the calculation like this is that this number represents something real - your server in fact handled that many requests per minute, and you can increase the number of threads and/or decrease the delays to discover your server’s maximum throughput. Whereas if you made calculations that factored out delays and JMeter’s processing, it would be unclear what you could conclude from that number.
+
+#### Backend Listener
+
+
+
 ### 18.4 Configuration Elements
 
 #### HTTP Cookie Manager
@@ -1242,6 +1281,10 @@ Java gives you (for free) the custom networking, threading, and state management
 ### 18.6 Timers
 
 ### 18.7 Pre Processors
+
+#### HTTP URL Re-writing Modifier
+
+
 
 ### 18.8 Post-Processors
 
