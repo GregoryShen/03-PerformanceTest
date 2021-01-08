@@ -1312,6 +1312,98 @@ Java gives you (for free) the custom networking, threading, and state management
 
 #### HTTP Request
 
+This sampler lets you send an HTTP/HTTPS request to a web server. It also lets you control whether or not JMeter parses HTML files for images and other embedded resources and sends HTTP requests to retrieve them. The following types of embedded resource are retrieved:
+
+* images
+* applets
+* stylesheets(CSS) and resources referenced from those files
+* external scripts
+* frames, iframes
+* background images(body, table, TD, TR)
+* background sound
+
+The default parser is `org.apache.jmeter.protocol.http.parser.LagartoBaseHtmlParser`. This can be changed by using the property “`htmlparser.className`”.
+
+If you are going to send multiple requests to the same web server, consider using an <u>HTTP Request Defaults</u>
+
+Configuration Element so you do not have to enter the same information for each HTTP Request.
+
+Or, instead of manually adding HTTP Requests, you may want to use <u>JMeter’s HTTP(S) Test Script Recorder</u> to create them. This can save you time if you have a lot of HTTP requests or requests with many parameters.
+
+There are three different test elements used to define the samplers:
+
+* AJP/1.3 Sampler
+
+  uses the Tomcat mod_jk protocol (allows testing of Tomcat in AJP mode without needing Apache httpd) The AJP Sampler does not support multiple file upload; only the first file will be used.
+
+* HTTP Request
+
+  This has an implementation drop-down box, which selects the HTTP protocol implementation to be used:
+
+  ​	Java
+
+  ​			uses the HTTP implementation provided by the JVM. This has some limitations in comparison 			with the HttpClient implementations - see below.
+
+  ​	HTTPClient4
+
+  ​			uses Apache HttpComponents HttpClient 4.x.
+
+  ​	Blank Value
+
+  ​			does not set implementation on HTTP Samplers, so relies on HTTP Request Defaults if present 
+
+  ​			or on `jmeter.httpsampler` property defined in `jmeter.properties`
+
+* GraphQL HTTP Request
+
+  This is a GUI variation of the HTTP Request to provide more convenient UI elements to view or edit GraphQL <u>Query</u>, <u>Variables</u> and <u>Operation Name</u>, while converting them into HTTP Arguments automatically under the hood using the same sampler. This hides or customizes the following UI elements as they are less convenient for or irrelevant to GraphQL over HTTP/HTTPS requests:
+
+  * <u>Method</u>: only POST and GET methods are available conforming the GraphQL over HTTP specification. POST method is selected by default.
+  * <u>Parameters</u> and <u>Post Body</u> tabs: you may view or edit parameter content through Query, Variables and Operation Name UI elements instead.
+  * <u>File Upload</u> tab: irrelevant to GraphQL queries.
+  * <u>Embedded Resources from HTML files</u> section in the Advanced tab: irrelevant in GraphQL JSON responses.
+
+The Java HTTP implementation has some limitations:
+
+* There is no control over how connections are re-used. When a connection is released by JMeter, it may or may not be reused by the same thread.
+* The API is best suited to single-threaded usage - various settings are defined via system properties, and therefore apply to all connections.
+* No support of Kerberos authentication
+* It does not support client based certificate testing with Keystore Config.
+* Better control of Retry mechanism
+* It does not support virtual hosts.
+* It supports only the following methods: GET, POST, HEAD, OPTIONS, PUT, DELETE and TRACE
+* Better control on DNS Caching with <u>DNS Cache Manager</u>
+
+> Note: the FILE protocol is intened for testing purposes only. It is handled by the same code regardless of which HTTP Sampler is used.
+
+If the request requires server or proxy login authorization (i.e. where a browser would create a pop-up dialog box), you will also have to add an <u>HTTP Authorization Manager</u> Configuration Element. For normal logins (i.e. where the user enters login information in a form), you will need to work out what the form submit button does, and create an HTTP request with the appropriate method (usually POST) and the appropriate parameters from the form definition. If the page uses HTTP, you can use the JMeter Proxy to capture the login sequence.
+
+A separate SSL context is used for each thread. If you want to use a single SSL context (not the standard behaviour of browsers), set the JMeter property:
+
+```properties
+https.sessioncontext.shared=true
+```
+
+By default, since version 5.0, the SSL context is retained during a Thread Group iteration and reset for each test iteration. If in your test plan the same user iterates multiple times, then you should set this to false.
+
+```properties
+httpclient.reset_state_on_thread_group_iteration=true
+```
+
+> Note: this does not apply to the Java HTTP implementation.
+
+JMeter defaults to the SSL protocol level TLS. If the server needs a different level, e.g. SSLv3, change the JMeter property, for example:
+
+```properties
+https.default.protocol=SSLv3
+```
+
+JMeter also allows one to enable addtional protocols, by changing the property `http.socket.protocols`.
+
+If the request uses cookies, then you will also need an <u>HTTP Cookie Manager</u>. You can add either of these elements to the Thread Group or the HTTP Request. If you have more than one HTTP Request that needs authorizations or cookies, then add the elements to the Thread Group. That way, all HTTP Request controllers will share the same Authorization Manager and Cookie Manager elements.
+
+If the request uses a technique called “URL Rewriting” to maintain sessions, then see section <u>6.1 Handling User Sessions With URL Rewriting</u> for additional configuration steps.
+
 
 
 ### 18.2 Logic Controllers
@@ -1320,11 +1412,29 @@ Java gives you (for free) the custom networking, threading, and state management
 
 #### Graph Results
 
-> Graph Results MUST NOT BE USED during load test as it consumes a lot of resources (memory and CPU). Use it only for either functional testing or during Test Plan debugging and Validation.
+> ==Graph Results MUST NOT BE USED during load test as it consumes a lot of resources (memory and CPU). Use it only for either <u>functional testing</u> or <u>during Test Plan debugging and Validation</u>.==
 
 The Graph Results listener generates a simple graph that plots all sample times. Along the bottom of the graph, the current sample(black), the current average of all samples (blue), the current standard deviation (red), and the current throughput rate (green) are displayed in milliseconds.
 
 The throughput number represents the actual number of requests/minute the server handled. This calculation includes any delays you added to your test and JMeter’s own internal processing time. The advantage of doing the calculation like this is that this number represents something real - your server in fact handled that many requests per minute, and you can increase the number of threads and/or decrease the delays to discover your server’s maximum throughput. Whereas if you made calculations that factored out delays and JMeter’s processing, it would be unclear what you could conclude from that number.
+
+![](https://jmeter.apache.org/images/screenshots/graph_results.png)
+
+The following table briefly describes the items on the graph. Further details on the precise meaning of the statistical terms can be found on the web - e.g. Wikipedia - or by consulting a book on statistics.
+
+* Data - plot the actual data values
+* Average - plot the Average
+* Median - plot the Median(midway value)
+* Deviation - plot the Standard Deviation (a measure of the variation)
+* Throughput - plot the number of samples per unit of time
+
+<u>The individual figures at the bottom of the display are the current values.</u> “==Latest Sample==” is the ==current elapsed sample time==, shown on the graph as “Data”.
+
+The value displayed on the top left of graph is the max of 90^th^ percentile of response time.
+
+#### View Results Tree
+
+
 
 #### Backend Listener
 
@@ -1332,9 +1442,25 @@ The throughput number represents the actual number of requests/minute the server
 
 ### 18.4 Configuration Elements
 
+Configuration elements can be used to set up defaults and variables for later use by samplers. Note that these elements are processed at the start of the scope in which they are found, i.e. before any samplers in the same scope.
+
+#### CSV Data Set Config
+
+#### HTTP Authorization Manager
+
+
+
 #### HTTP Cookie Manager
 
+
+
 #### HTTP Request Defaults
+
+
+
+#### HTTP Header Manager
+
+
 
 ### 18.5 Assertions
 
