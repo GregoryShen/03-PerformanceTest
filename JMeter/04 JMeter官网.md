@@ -506,6 +506,24 @@ Invoking JMeter as “jmeter -?” will print a list of all the command-line opt
 
 ### 1.5 Configuring JMeter
 
+If you wish to modify the properties with which JMeter runs you need to either modify the `user.properties` in the `/bin` directory or create your own copy of the `jmeter.properties` and specify it in the command line.
+
+> Note: You can define additional JMeter properties in the file defined by the JMeter property `user.properties` which has the default value `user.properties`. The file will be automatically loaded if it is found in the current directory or if it is found in the JMeter bin directory. Similarly, `system.properties` is used to update system properties.
+
+| Attribute    | Description                                                  | Required |
+| ------------ | ------------------------------------------------------------ | -------- |
+| ssl.provider | You can specify the class for your SSL implementation if you don’t want to use the built-in Java implentation. | No       |
+| xml.parser   | You can specify an implementation as your XML parser. The default value is : `org.apache.xerces.parsers.SAXParser` | No       |
+| remote_hosts | Comma-                                                       |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+
+
+
 
 
 ## 2. Building a Test Plan
@@ -962,8 +980,6 @@ If your web application uses URL rewriting rather than cookies to save session i
 
 To respond correctly to URL rewriting, JMeter needs to parse the HTML received from the server and retrieve the unique session ID. Use the appropriate <u>HTTP URL Re-writing Modifier</u> to accomplish this. Simply enter the name of your session ID parameter into the modifier, and it will find it and add it to each request. If the request already has a value, it will be replaced. If “Cache Session id?” is checked, then the last found session id will be saved, and will be used if the previous HTTP sample does not contain a session id.
 
-
-
 ### 5.2 Using a Header Manager
 
 The <u>HTTP Header Manager</u> lets you customize what information JMeter sends in the HTTP request header. This header includes properties like “User-Agent”, “Pragma”, “Referer”, etc.
@@ -976,6 +992,8 @@ Building a Database Test Plan
 
 A listener is a component that shows the results of the samples. The results can be shown in a tree, tables, graphs or simply written to a log file. To view the contents of a response from any given sampler, add either of the Listeners “View Results Tree” or “View Results in table” to a test plan. To view the response time graphically, add graph results. The listeners section of the components page has full descriptions of all the listeners.
 
+监听器是一个展示取样器结果的元件. 取样结果可以是一棵树, 表格, 图案或者直接写入到一个日志文件中. 
+
 > Different listeners display the response information in different ways. However, they all write the same raw data to the output file - if one is specified.
 
 The “Configure” button can be used to specify which fields to write to the file, and whether to write it as CSV or XML. CSV files are much smaller than XML files, so use CSV if you are generating lots of samples.
@@ -986,7 +1004,7 @@ If you only wish to record certain samples, add the Listener as a child of the s
 
 ### 12.1 Default Configuration
 
-The default items to be saved can be defined in the jmeter.properties (or use.properties) file. The properties are used as the initial settings for the Listener Config pop-up, and are also used for the log file specified by the `-l` command-line flag(commonly used for CLI mode test runs).
+The default items to be saved can be defined in the `jmeter.properties` (or `user.properties`) file. The properties are used as the initial settings for the Listener Config pop-up, and are also used for the log file specified by the `-l` command-line flag (commonly used for CLI mode test runs).
 
 To change the default format, find the following line in jmeter.properties:
 
@@ -994,33 +1012,161 @@ To change the default format, find the following line in jmeter.properties:
 jmeter.save.saveservice.output_format=
 ```
 
+The information to be saved is configurable. For maximum information, choose “xml” as the format and specify “Functional Test Mode” on the Test Plan element. If this box is not checked, the default saved data includes a time stamp (the number of milliseconds since midnight, January 1, 1970 UTC), the data type, the thread name, the label, the response time, message, and code, and a success indicator. If checked, all information, including the full response data will be logged.
 
+The following example indicates how to set properties to get a vertical bar(“|”) delimited format that will output results like:.
+
+```properties
+timeStamp|time|label|responseCode|threadName|dataType|success|failureMessage
+02/06/03 08:21:42|1187|Home|200|Thread Group-1|text|true|
+02/06/03 08:21:42|47|Login|200|Thread Group-1|text|false|Test Failed:
+    expected to contain: password etc.
+```
+
+The corresponding jmeter.properties that need to be set are shown below. One oddity in this example is that the output_format is set to csv, which typically indicates comma-separated values. However, the default_delimiter was set to be a vertical bar instead of a comma, so the csv tag is a misnomer in this case. (Think of CSV as meaning character separated values)
+
+```properties
+jmeter.save.saveservice.output_format=csv
+jmeter.save.saveservice.assertion_results_failure_message=true
+jmeter.save.saveservice.default_delimiter=|
+```
+
+还有一些其他的设置...没抄
 
 #### 12.1.1 Sample Variables
 
+JMeter supports the `sample_variables` property to define a list of addtional JMeter variables which are to be saved with each sample in the JTL files. The values are written to CSV files as addtional columns, and as addtional attributes in XML files. See above for an example.
+
 #### 12.1.2 Sample Result Save Configuraion
+
+Listeners can be configured to save different items to the result log files(JTL) by using the Config popup as shown below. The defaults are defined as described in the Listener Default Configuration section above. Items with (CSV) after the name only apply to the CSV format; items with (XML) only apply to XML format. CSV format cannot currently be used to save any items that include line-breaks.
+
+![](https://jmeter.apache.org/images/screenshots/sample_result_config.png)
+
+Note that cookies, method and the query string are saved as part of the “Sampler Data” option.
 
 ### 12.2 CLI mode (batch) test runs
 
+When running in CLI mode, the `-l` flag can be used to create a top-level listener for the test run. This is in addition to any Listener defined in the test plan. The configuration of this listener is controller by entries in the file `jmeter.properties` as described in the previous section.
+
+This feature can be used to specify different data and log files for each test run, for example:
+
+```shell
+jmeter -n -t testplan.jmx -l testplan_01.jtl -j testplan_01.log
+jmeter -n -t testplan.jmx -l testplan_02.jtl -j testplan_02.log
+```
+
+Note that ==JMeter logging messages are written to the file `jmeter.log` by default. This file is recreated each time, so if you want to keep the log files for each run, you will need to rename it using the `-j` option== as above.
+
+JMeter supports variables in the log file name. If the filename contains paired single-quotes, then the name is processed as a `SimpleDateFormat` format applied to the current date, for example: `log_file='jmeter_'yyyyMMddHHmmss'.tmp’`. This can be used to generate a unique name for each test run.
+
 ### 12.3 Resource usage
+
+> Listeners can user a lot of memory if there are a lot of samples.
+
+Most of the listeners currently keep a copy of every sample they display, apart from:
+
+* Simple Data Writer
+* BeanShell/JSR223 Listener
+* Mailer Visualizer
+* Monitor Results
+* Summary Report
+
+The following Listeners no longer need to keep copies of every single sample. Instead, samples with the same elapsed time are aggregated. Less memory is now needed, especially if most samples only take a second or two at most.
+
+* Aggregate Report
+* Aggregate Graph
+
+To minimize the amount of memory needed, use the Simple Data Writer, and use the CSV format.
 
 ### 12.4 CSV Log format
 
+The CSV log format depends on which data items are selected in the configuraion. Only the specified data items are recorded in the file. The order of appearance of columns is fixed, and is as follows:
+
+* timeStamp - in milliseconds since 1/1/1970
+* elapsed - in milliseconds
+* label - sampler label
+* responseCode - e.g. 200, 404
+* responseMessage - e.g. OK
+* threadName
+* dataType - e.g. text
+* success - true or false
+* failureMessage - if any
+* bytes - number of bytes in the sample
+* sentBytes - number of bytes in the sample
+* grpThreads - number of active threads in this thread group
+* allThreads - total number of active threads in all groups
+* URL
+* Filename - if Save Response to File was used
+* latency - time to first response
+* connect - time to establish connection
+* encoding
+* SampleCount - number of samples (1, unless multiple samples are aggregated)
+* ErrorCount - number of errors (0 or 1, unless multiple samples are aggregated)
+* Hostname - where the sample was generated
+* IdleTime - number of milliseconds of ‘Idle’ time (normally 0)
+* Variables, if specified
+
 ### 12.5 XML Log format 2.1
+
+The format of the updated XML (2.1) is as follows (line breaks will be different):
+
+具体的图查看教程...目前看不懂
+
+Note that the sample node name may be either “sample” or “httpSample”.
 
 ### 12.6 XML Log format 2.2
 
+The format of the JTL files is identical for 2.2 and 2.1. Format 2.2 only affects JMX files.
+
 ### 12.7 Sample Attributes
+
+The sample attributes have the following meaning:
+
+| Attribute | Content                                                      |
+| --------- | ------------------------------------------------------------ |
+| by        | Bytes                                                        |
+| sby       | Sent Bytes                                                   |
+| de        | Data encoding                                                |
+| dt        | Data type                                                    |
+| ec        | Error count (0 or 1, unless multiple samples are aggregated) |
+| hn        | Hostname where the sample was generated                      |
+| it        | Idle Time = time not spent sampling (milliseconds) (generally 0) |
+| lb        | Label                                                        |
+| lt        | lantency = time to initial response (milliseconds) - not all samplers support this |
+| ct        | Connect Time = time to establish the connection (milliseconds) - not all samplers support this |
+| na        | Number of active threads for all thread groups               |
+| ng        | Number of active threads in this group                       |
+| rc        | Response Code (3.g. 200)                                     |
+| rm        | Response Message (e.g. OK)                                   |
+| s         | Success flag (true/false)                                    |
+| sc        | Sample count (1, unless multiple samples are aggregated)     |
+| t         | Elapsed time (milliseconds)                                  |
+| tn        | Thread Name                                                  |
+| ts        | timeStamp (milliseconds since midnight Jan 1, 1970 UTC)      |
+| varname   | Value of he named variable                                   |
+
+> JMeter allows additional variables to be saved with the test plan. Currently, the variables are saved as addtional attributes. The testplan variable name is used as the attribute name. See <u>Sample variables</u> for more information.
 
 ### 12.8 Saving response data
 
+As shown above, the response data can be saved in the XML log file if required. However, this can make the file rather large, and the text has to be encoded so that it is still valid XML. Also, images cannot be included. Only sample responses with the type TEXT can be saved.
+
+Another solution is to use the Post-Processor <u>Save Responses to a file</u>. This generates a new file for each sample, and saves the file name with the sample. The file name can then be included in the sample log output. The data will be retrieved from the file if necessary when the sample log file is reloaded.
+
 ### 12.9 Loading(reading) response data
+
+To view an existing results file, you can use the File “Browse…” button to select a file. If necessary, just create a dummy testplan with the appropriate Listener in it.
+
+Results can be read from XML or CSV format files. When reading from CSV results files, the header (if present) is used to determine which fields were saved. <u>In order to interpret a header-less CSV file correctly, the appropriate JMeter properites must be set.</u>
+
+> JMeter does not clear any current data before loading the new file thus allowing files to be merged. If you want to clear the current data, use the menu item: Run-> Clear(Ctrl+Shift+E) or Run->Clear All(Ctrl+E) before loading the file.
 
 ### 12.10 Saving Listener GUI data
 
+JMeter is capable of saving any listener as a PNG file. To do so, select the listener in the left panel. Click Edit -> Save Node As Image. A file dialog will appear. Enter the desired name and save the listener.
 
-
-
+The Listeners which generate output as tables can also be saved using Copy/Paste. Select the desired cells in the table, and use the OS Copy short-cut (normally Ctrl+C). The data will be saved to the clipboard, from where it can be pasted into another application, e.g. a spreadsheet or text editor.
 
 ## 13. Remote Testing
 
@@ -1040,7 +1186,7 @@ jmeter.save.saveservice.output_format=
 
 
 
-## 14. Dashboard Report
+## 14. Generating Report Dashboard
 
 JMeter supports dashboard report generation to get graphs and statistics from a test plan.
 
@@ -1055,27 +1201,76 @@ This report provides the following metrics:
 * APDEX (Application Performance Index) table that computes for every transaction the APDEX based on configurable values for tolerated and satisfied thresholds
 * A request summary graph showing the Success and failed requests (Transaction Controller Sample Results are not taken into account) percentage:
 * A Statistics table providing in one table a summary of all metrics per transaction including 3 configurable percentiles:
-* An error table providing a summary of all errors and their proportion in the total requests”
+* An error table providing a summary of all errors and their proportion in the total requests:
 * A Top 5 Errors by Sampler table providing for every Sampler (excluding Transaction Controller by default) the top 5 Errors:
 * Zoomable chart where you can check/uncheck every transaction to show/hide it for:
 	* Response times Over Time (includes Transaction Controller Sample Results):
-	* 
+	
+	* Response times Percentiles Over Time(successful responses only):
+	
+	* Active Threads Over Time:
+	
+	* Bytes throughput Over Time (Ignored Transaction Controller Sample Results):
+	
+	* Latencies Over Time(Includes Transaction Controller Sample Results):
+	
+	* Connect Time Over TIme (Includes Transaction Controller Sample Results):
+	
+	* Hits per second (Ignores Transaction Controller Sample Results):
+	
+	* Response codes per second (Ignores Transaction Controller Sample Results):
+	
+	* Transactions per second (Includes Transaction Controller Sample Results):
+	
+	* Response Time vs Request per second (Ignores Transaction Controller Sample Results):
+	
+	* Latency vs Request per second (Ignores Transaction Controller Sample Results):
+	
+	* Response time Overview (Excludes Transaction Controller Sample Results):
+	
+	* Response times percentiles (Includes Transaction Controller Sample Results):
+	
+	* Times vs Threads (Includes Transaction Controller Sample Results):
+	
+	  > In distributed mode, this graph shows a horizontal axis the number of threads for 1 server. It’s a current limitation.
+	
+	* Response Time Distribution (Includes Transaction Controller Sample Results):
 
 ### 14.2 Configuring Dashboard Generation
+
+Dashboard generation uses JMeter properties to customize the report. Some properties are used for general settings and others are used for a particular graph configuration or exporter configuration.
+
+> All report generator properites can be found in file `reportgenerator.properties`. To customize these properties, you should copy them in `user.properties` file and modify them.
 
 #### 14.2.1 Requirements
 
 ##### 14.2.1.1 Filtering Configuration
 
+Ensure you set property `jmeter.reportgenerator.exporter.html.series_filter` to keep only the transactions you want in the report if you don’t want everything.
 
+In the example below you must only modify `Search|Order`, keep the rest:
+
+```properties
+jmeter.reportgenerator.exporter.html.series_filter=^(Search|Order)(-success|-failure)?$
+```
 
 ##### 14.2.1.2 Save Service configuration
 
+To enable the generator to operate, the CSV file generaterd by JMeter must include certain required data which <u>are correct by default in the last live version</u> of JMeter.
 
+If you modified those settings, check that your JMeter configuration follows these settings (these are the defaults):
+
+```properties
+jmeter.save.saveservice.bytes = true
+# Only available with HttpClient4
+# jmeter.save.saverservice.sent_bytes=true
+jmete.save.saveservice/lable = true
+...
+```
 
 ##### 14.2.1.3 Transaction Controller configuration
 
-
+事务控制器...目前还不知道是干嘛的..这个小标题先不写了.
 
 #### 14.2.2 General settings
 
@@ -1110,6 +1305,8 @@ This report provides the following metrics:
 
 
 #### 14.2.5 Sample configuration
+
+
 
 ### 14.3 Generating reports
 
@@ -1191,9 +1388,15 @@ Refer to HTTP(S) Test Script Recorder for details on setting up the recorder. Th
 
 ### 16.10 Developing script functions in Groovy or Jexl3 etc.
 
+
+
 ### 16.11 Parameterizing tests
 
+
+
 ### 16.12 JSR223 Elements
+
+
 
 ### 16.13 Sharing variables between threads and thread groups
 
