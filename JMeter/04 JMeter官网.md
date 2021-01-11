@@ -1531,7 +1531,7 @@ If you are going to send multiple requests to the same web server, consider usin
 
 Configuration Element so you do not have to enter the same information for each HTTP Request.
 
-Or, instead of manually adding HTTP Requests, you may want to use <u>JMeter’s HTTP(S) Test Script Recorder</u> to create them. This can save you time if you have a lot of HTTP requests or requests with many parameters.
+Or, instead of manually adding HTTP Requests, you may want to use <u>JMeter’ s HTTP(S) Test Script Recorder</u> to create them. This can save you time if you have a lot of HTTP requests or requests with many parameters.
 
 There are three different test elements used to define the samplers:
 
@@ -1545,7 +1545,7 @@ There are three different test elements used to define the samplers:
 
   ​	Java
 
-  ​			uses the HTTP implementation provided by the JVM. This has some limitations in comparison 			with the HttpClient implementations - see below.
+  ​			uses the HTTP implementation provided by the JVM. This has some limitations in comparison with the HttpClient implementations - see below.
 
   ​	HTTPClient4
 
@@ -1577,11 +1577,11 @@ The Java HTTP implementation has some limitations:
 * It supports only the following methods: GET, POST, HEAD, OPTIONS, PUT, DELETE and TRACE
 * Better control on DNS Caching with <u>DNS Cache Manager</u>
 
-> Note: the FILE protocol is intened for testing purposes only. It is handled by the same code regardless of which HTTP Sampler is used.
+> Note: the FILE protocol is intended for testing purposes only. It is handled by the same code regardless of which HTTP Sampler is used.
 
 If the request requires server or proxy login authorization (i.e. where a browser would create a pop-up dialog box), you will also have to add an <u>HTTP Authorization Manager</u> Configuration Element. For normal logins (i.e. where the user enters login information in a form), you will need to work out what the form submit button does, and create an HTTP request with the appropriate method (usually POST) and the appropriate parameters from the form definition. If the page uses HTTP, you can use the JMeter Proxy to capture the login sequence.
 
-A separate SSL context is used for each thread. If you want to use a single SSL context (not the standard behaviour of browsers), set the JMeter property:
+A separate SSL context is used for each thread. If you want to use a single SSL context (not the standard behavior of browsers), set the JMeter property:
 
 ```properties
 https.sessioncontext.shared=true
@@ -1601,11 +1601,47 @@ JMeter defaults to the SSL protocol level TLS. If the server needs a different l
 https.default.protocol=SSLv3
 ```
 
-JMeter also allows one to enable addtional protocols, by changing the property `http.socket.protocols`.
+JMeter also allows one to enable additional protocols, by changing the property `http.socket.protocols`.
 
 If the request uses cookies, then you will also need an <u>HTTP Cookie Manager</u>. You can add either of these elements to the Thread Group or the HTTP Request. If you have more than one HTTP Request that needs authorizations or cookies, then add the elements to the Thread Group. That way, all HTTP Request controllers will share the same Authorization Manager and Cookie Manager elements.
 
 If the request uses a technique called “URL Rewriting” to maintain sessions, then see section <u>6.1 Handling User Sessions With URL Rewriting</u> for additional configuration steps.
+
+Parameters:
+
+| Attribute                                       | Description                                                  | Required |
+| ----------------------------------------------- | ------------------------------------------------------------ | -------- |
+| Name                                            | Descriptive name for this sampler that is shown in the tree  | No       |
+| Server                                          | Domain name or IP address of the web server, e.g. www.exmaple.com. [==Do not include the `http://` prefix==.] Note: If the “Host” header is defined in a Header Manager, then this will be used as the virtual host name.  <u>Server is required, unless: it is provided by HTTP Request Defaults, or a full URL including scheme, host and port (`scheme://host:port`) is set in *Path* field</u> | No       |
+| Port                                            | Port the web server is listening to. Default: 80             | No       |
+| Connect Timeout                                 | Connection Timeout. Number of milliseconds to wait for a connection to open. | No       |
+| Response Timeout                                | Response Timeout. Number of milliseconds to wait for a response. Note that this applies to each wait for a response. If the server response is sent in several chunks, the overall elapsed time may be longer than the timeout. A Duration Assertion can be used to detect responses that take too long to complete. | No       |
+| Server(*proxy*)                                 | Hostname or IP address of a proxy server to perform request. [Do not include the http:// prefix.] | No       |
+| Port                                            |                                                              |          |
+| Username                                        |                                                              |          |
+| Password                                        |                                                              |          |
+| Implementation                                  |                                                              |          |
+| Protocol                                        |                                                              |          |
+| Method                                          |                                                              |          |
+| Content Encoding                                |                                                              |          |
+| Redirect                                        |                                                              |          |
+| Automatically                                   |                                                              |          |
+| Follow Redirects                                |                                                              |          |
+| Use KeepAlive                                   |                                                              |          |
+| Use multipart/form-data for HTTP POST           |                                                              |          |
+| Browser-compatible headers                      |                                                              |          |
+| Path                                            |                                                              |          |
+| Send Parameters With the Request                | The query string will be generated from the list of parameters you provide. Each parameter has a name and value, the options to encode the parameter, and an option to include or exclude an equals sign (some applications don’t expect an equals sign when the value is the empty string). The query string will be generated in the correct fashion, depending on the choice of “Method” you made (i.e. if you chose GET or DELETE, the query string will be appended to the URL, if POST or PUT, then it will be sent separately). |          |
+| File Path                                       |                                                              |          |
+| Parameter name                                  |                                                              |          |
+| MIME Type                                       |                                                              |          |
+| Retrieve All Embedded Resources from HTML Files |                                                              |          |
+| Save response as MD5 hash?                      |                                                              |          |
+| URLs must match:                                |                                                              |          |
+| Use concurrent pool                             |                                                              |          |
+| Size                                            |                                                              |          |
+| Source address type                             |                                                              |          |
+| Source address field                            |                                                              |          |
 
 
 
@@ -1619,7 +1655,7 @@ If the request uses a technique called “URL Rewriting” to maintain sessions,
 
 The Graph Results listener generates a simple graph that plots all sample times. Along the bottom of the graph, the current sample(black), the current average of all samples (blue), the current standard deviation (red), and the current throughput rate (green) are displayed in milliseconds.
 
-The throughput number represents the actual number of requests/minute the server handled. This calculation includes any delays you added to your test and JMeter’s own internal processing time. The advantage of doing the calculation like this is that this number represents something real - your server in fact handled that many requests per minute, and you can increase the number of threads and/or decrease the delays to discover your server’s maximum throughput. Whereas if you made calculations that factored out delays and JMeter’s processing, it would be unclear what you could conclude from that number.
+The throughput number represents the actual number of requests/minute the server handled. This calculation includes any delays you added to your test and JMeter’ s own internal processing time. The advantage of doing the calculation like this is that this number represents something real - your server in fact handled that many requests per minute, and you can increase the number of threads and/or decrease the delays to discover your server’s maximum throughput. Whereas if you made calculations that factored out delays and JMeter’ s processing, it would be unclear what you could conclude from that number.
 
 ![](https://jmeter.apache.org/images/screenshots/graph_results.png)
 
@@ -1679,7 +1715,19 @@ Configuration elements can be used to set up defaults and variables for later us
 
 ### 18.9 Miscellaneous Features
 
+#### Test Plan
 
+#### Thread Group
+
+#### WorkBench
+
+#### HTTP(S) Test Script Recorder
+
+#### Test Fragment
+
+#### setUp Thread Group
+
+#### tearDown Thread Group
 
 
 
