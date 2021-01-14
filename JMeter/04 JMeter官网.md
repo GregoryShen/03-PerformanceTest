@@ -530,7 +530,7 @@ If you wish to modify the properties with which JMeter runs you need to either m
 
 A test plan describes a series of steps JMeter will execute when run. A complete test plan will consist of one or more Thread Groups, logic controllers, sample generating controllers, listeners, timers, assertions, and configuration elements.
 
-一个完整的测试计划应当包含一个或多个线程组, 逻辑控制器, sample generating controllers, 监听器, timers, 断言和配置元件.
+一个完整的测试计划应当包含一个或多个线程组, 逻辑控制器, 生成取样的控制器, 监听器, timers, 断言和配置元件.
 
 ### 2.1 Adding and Removing Elements
 
