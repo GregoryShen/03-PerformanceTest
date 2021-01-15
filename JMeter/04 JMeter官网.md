@@ -2,7 +2,7 @@
 
 ## What can I do with it?
 
-Apache JMeter may be used to <u>test performance</u> both on ==static and dynamic resources, Web dynamic applications.==
+Apache JMeter may be used to <u>test performance</u> both on **static** and **dynamic resources**, **Web dynamic applications**.
 
 It can be used to <u>simulate a heavy load</u> on a server, group of servers, network or object <u>to test its strength</u> or <u>to analyze overall performance</u> *under different load types*.
 
@@ -74,7 +74,7 @@ Ensure you follow best-practices when building your Test Plan.
 
 #### 1.0.2 Load Test running
 
-Once your Test Plan is ready, you can start your Load Test. The first step is to configure the injectors that will run JMeter, this as for any other Load Testing tool includes:
+Once your Test Plan is ready, you can start your Load Test. **The first step is to configure the injectors that will run JMeter**, this as for any other Load Testing tool includes:
 
 * Correct machine sizing in terms of CPU, memory, and network
 * OS Tuning
@@ -512,7 +512,7 @@ If you wish to modify the properties with which JMeter runs you need to either m
 
 | Attribute    | Description                                                  | Required |
 | ------------ | ------------------------------------------------------------ | -------- |
-| ssl.provider | You can specify the class for your SSL implementation if you don’t want to use the built-in Java implentation. | No       |
+| ssl.provider | You can specify the class for your SSL implementation if you don’t want to use the built-in Java implantation. | No       |
 | xml.parser   | You can specify an implementation as your XML parser. The default value is : `org.apache.xerces.parsers.SAXParser` | No       |
 | remote_hosts | Comma-                                                       |          |
 |              |                                                              |          |
@@ -579,7 +579,7 @@ The chosen port is displayed in the console window.
 
 The commands currently supported are:
 
-* `Shutdown` - greaceful shutdown
+* `Shutdown` - graceful shutdown
 * `StopTestNow` - immediate shutdown
 
 These commands can be sent by using the `shutdown[.cnd|.sh]` or `stoptest[.cmd|.sh]` script respectively. The scripts are to be found in the JMeter <u>bin</u> directory. The commands will only be accepted if the script is run from the same host.
@@ -1609,41 +1609,99 @@ If the request uses a technique called “URL Rewriting” to maintain sessions,
 
 Parameters:
 
-| Attribute                                       | Description                                                  | Required |
-| ----------------------------------------------- | ------------------------------------------------------------ | -------- |
-| Name                                            | Descriptive name for this sampler that is shown in the tree  | No       |
-| Server                                          | Domain name or IP address of the web server, e.g. www.exmaple.com. [==Do not include the `http://` prefix==.] Note: If the “Host” header is defined in a Header Manager, then this will be used as the virtual host name.  <u>Server is required, unless: it is provided by HTTP Request Defaults, or a full URL including scheme, host and port (`scheme://host:port`) is set in *Path* field</u> | No       |
-| Port                                            | Port the web server is listening to. Default: 80             | No       |
-| Connect Timeout                                 | Connection Timeout. Number of milliseconds to wait for a connection to open. | No       |
-| Response Timeout                                | Response Timeout. Number of milliseconds to wait for a response. Note that this applies to each wait for a response. If the server response is sent in several chunks, the overall elapsed time may be longer than the timeout. A Duration Assertion can be used to detect responses that take too long to complete. | No       |
-| Server(*proxy*)                                 | Hostname or IP address of a proxy server to perform request. [Do not include the http:// prefix.] | No       |
-| Port                                            |                                                              |          |
-| Username                                        |                                                              |          |
-| Password                                        |                                                              |          |
-| Implementation                                  |                                                              |          |
-| Protocol                                        |                                                              |          |
-| Method                                          |                                                              |          |
-| Content Encoding                                |                                                              |          |
-| Redirect                                        |                                                              |          |
-| Automatically                                   |                                                              |          |
-| Follow Redirects                                |                                                              |          |
-| Use KeepAlive                                   |                                                              |          |
-| Use multipart/form-data for HTTP POST           |                                                              |          |
-| Browser-compatible headers                      |                                                              |          |
-| Path                                            |                                                              |          |
-| Send Parameters With the Request                | The query string will be generated from the list of parameters you provide. Each parameter has a name and value, the options to encode the parameter, and an option to include or exclude an equals sign (some applications don’t expect an equals sign when the value is the empty string). The query string will be generated in the correct fashion, depending on the choice of “Method” you made (i.e. if you chose GET or DELETE, the query string will be appended to the URL, if POST or PUT, then it will be sent separately). Also, if you are sending a file using a multipart form, the query string will be created using the multipart form specifications. See below for some further info on parameter handling.<br>Additionally, you can specify whether each parameter should be URL encoded. If you are not sure what this means, it is probably best to select it. If your values contain characters such as the following then encoding is usually required:<br> *  ASCII Control Chars<br>*  Non-ASCII characters<br>* |          |
-| File Path                                       |                                                              |          |
-| Parameter name                                  |                                                              |          |
-| MIME Type                                       |                                                              |          |
-| Retrieve All Embedded Resources from HTML Files |                                                              |          |
-| Save response as MD5 hash?                      |                                                              |          |
-| URLs must match:                                |                                                              |          |
-| Use concurrent pool                             |                                                              |          |
-| Size                                            |                                                              |          |
-| Source address type                             |                                                              |          |
-| Source address field                            |                                                              |          |
+|                    Attribute                    | Description                                                  |                Required                 |
+| :---------------------------------------------: | ------------------------------------------------------------ | :-------------------------------------: |
+|                      Name                       | Descriptive name for this sampler that is shown in the tree  |                   No                    |
+|                     Server                      | Domain name or IP address of the web server, e.g. www.exmaple.com. [==Do not include the `http://` prefix==.] Note: If the “Host” header is defined in a Header Manager, then this will be used as the virtual host name.  <u>Server is required, unless: it is provided by HTTP Request Defaults, or a full URL including scheme, host and port (`scheme://host:port`) is set in *Path* field</u> |                   No                    |
+|                      Port                       | Port the web server is listening to. Default: 80             |                   No                    |
+|                 Connect Timeout                 | Connection Timeout. Number of milliseconds to wait for a connection to open. |                   No                    |
+|                Response Timeout                 | Response Timeout. Number of milliseconds to wait for a response. Note that this applies to each wait for a response. If the server response is sent in several chunks, the overall elapsed time may be longer than the timeout. A Duration Assertion can be used to detect responses that take too long to complete. |                   No                    |
+|                 Server(*proxy*)                 | Hostname or IP address of a proxy server to perform request. [Do not include the http:// prefix.] |                   No                    |
+|                      Port                       | Port the proxy server is listening to.                       | No, unless proxy hostname is specified. |
+|                    Username                     | (Optional) username for proxy server                         |                   No                    |
+|                    Password                     | (Optional) password for proxy server.(N.B. this is stored unencrypted in the test plan) |                   No                    |
+|                 Implementation                  | `Java.HTTPClient4`. If not specified (and not defined by HTTP Request Defaults), the default depends on the value of the JMeter property `jmeter.httpsampler`, failing that, the HttpClient4 implementation is used. |                   No                    |
+|                    Protocol                     | HTTP, HTTPS or FILE. Default: HTTP                           |                   No                    |
+|                     Method                      | GET, POST, HEAD, TRACE, OPTIONS, PUT, DELETE, PATCH (not supported for JAVA implementation). With HttpClient4, the following methods related to WebDav are also allowed: COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPPATCH, UNLOCK, REPORT, MKCALENDAR, SEARCH.<br>More methods can be pre-defined for the HttpClient4 by using the JMeter property `httpsampler.user_defined_methods`. |                   Yes                   |
+|                Content Encoding                 | Content encoding to be used (for POST, PUT, PATCH and FILE). This is the character encoding to be used, and ==is not related to the Content-Encoding HTTP header.== |                   No                    |
+|             Redirect Automatically              | <u>Sets the underling http protocol handler to automatically follow redirects, so they are not seen by JMeter</u>, and thus will not appear as samples. ==Should only be used for GET and HEAD requests==. The HttpClient sampler will reject attempts to use it for POST or PUT.<br>Warning: see below for information on cookie and header handling. |                   No                    |
+|                Follow Redirects                 | ==This only has any effect if “<u>Redirect Automatically</u>” is not enabled.== If set, the JMeter sampler will check if the response is a redirect and follow it if so. <u>The initial redirect and further responses will appear as additional samples.</u> The URL and data fields of the parent sample will be taken from the final (non-redirected) sample, but the parent byte count and elapsed time include all samples. The latency is taken from the initial response. Note that the HttpClient sampler may log the following message:<br>“Redirect requested but followRedirects is disabled”<br>This can be ignored.<br>JMeter will collapse paths of the form ‘/../segment’ in both absolute and relative redirect URLs. For example http://host/one../two will be collapsed into http://host/two. If necessary, this behavior can be suppressed by setting the JMeter property `httpsampler.redirect.removeslashdotdot=false` |                   No                    |
+|                  Use KeepAlive                  | JMeter sets the `Connection: keep-alive` header. ==This does not work properly with the default HTTP implementation, as connection re-use is not under user-control.== It does work with the Apache HttpComponents HttpClient implementations. |                   No                    |
+|      Use multipart/form-data for HTTP POST      | Use a `multipart/form-data` or `application/x-www-form-urlencoded` post request |                   No                    |
+|           Browser-compatible headers            | When using `multipart/form-data`, this suppresses the `Content-Type` and `Content-Transfer-Encoding` headers; only the `Content-Disposition` header is sent. |                   No                    |
+|                      Path                       | The path to resource (for example, `/servlets/myServlet`). If the resource requires query string parameters, add them below in the “Send Parameters With the Request” section.<br> **As a special case, if the path starts with “`http://`” or “`https://`” then this is used as the full URL.**<br> In this case, the server, port and protocol fields are ignored; parameters are also ignored for GET and DELETE methods. Also please note that the path is not encoded - <u>apart from replacing spaces with %20</u> - so unsafe characters may need to be encoded to avoid errors such as `URISyntaxException`. |                   No                    |
+|        Send Parameters With the Request         | The query string will be generated from the list of parameters you provide. Each parameter has a <u>name</u> and <u>value</u>, the options to <u>encode the parameter</u>, and an option to <u>include or exclude an equals sign</u> (==some applications don’t expect an equals sign when the value is the empty string==). The query string will be generated in the correct fashion, depending on the choice of “Method” you made (i.e. **if you chose GET or DELETE, the query string will be appended to the URL, if POST or PUT, then it will be sent separately**). Also, **if you are sending a file using a multipart form, the query string will be created using the multipart form specifications.** See below for some further info on parameter handling.<br/>Additionally, you can specify whether each parameter should be URL encoded. If you are not sure what this means, it is probably best to select it. If your values contain characters such as the following then encoding is usually required:<br/>*  ASCII Control Chars<br/>*  Non-ASCII characters<br/>*  Reserved characters: URLs use some characters for special use in defining their syntax. When these characters are not used in their special role inside a URL, they need to be encoded, example: `$` ,`&` ,`+` , `,` , `/`, `:`, `;`, `=`, `?`, `@`<br>* Unsafe characters: Some characters present the possibility of being misunderstood within URLs for various reasons. These characters should also always be encoded, example: 空格，`<`, `>`, `#`, `%`, … |                   No                    |
+|                    File Path                    | Name of the file to send. If left blank, JMeter does not send a file, if filled in, JMeter automatically sends the request as a multipart form request.<br>If it is a POST or PUT or PATCH request and there is a single file whose ‘Parameter name’ attribute (below) is omitted, then the file is sent as the entire body of the request, i.e. no wrappers are added. This allows arbitrary bodies to be sent. This functionality is present for POST requests, and also for PUT requests. |                   No                    |
+|                 Parameter name                  | Value of the “name” web request parameter.                   |                   No                    |
+|                    MIME Type                    | MIME type (for example, `text/plain`). If it is a POST or PUT or PATCH request and either the “name” attribute are omitted or the request body is constructed from parameter values only, then the value of this field is used as the value of the `content-type` request header. |                   No                    |
+| Retrieve All Embedded Resources from HTML Files | Tell JMeter to parse the HTML file and send HTTP/HTTPS requests for all images, Java applets, JavaScript files, CSSs, etc. referenced in the file. |                   No                    |
+|           Save response as MD5 hash?            | If this is selected, then the response is not stored in the sample result. Instead, the 32 character MD5 hash of the data is calculated and stored instead. <u>This is intended for testing large amounts of data.</u> |                   No                    |
+|                 URLs must match                 | If present, ==this must be a regular expression== that is used to match against any embedded URLs found. So if you only want to download embedded resources from http://example.invalid/, use the expression: `http://example\.invalid/.*` |                   No                    |
+|               URLs must not match               | If present, this must be a regular expression that is used to filter out any embedded URLs found. So if you don’t want to download PNG or SVG files from any source, use the expression: `.*\.(?i:svg|png)` |                   No                    |
+|               Use concurrent pool               | Use a pool of concurrent connections to get embedded resources |                   No                    |
+|                      Size                       | Pool size for concurrent connections used to get embedded resources |                   No                    |
+|               Source address type               | [Only for HTTP Request with HTTPClient implementation] To distinguish the source address value, select the type of these:<br>* Select IP/Hostname to use a specific IP address or a (local) hostname<br>* Select Device to pick the first available address for that interface which this may be either IPv4 or IPv6<br>* Select Device IPv4 to select the IPv4 address of the device name (like eth0, lo, em0, etc)<br>* Select Device IPv6 to select the IPv6 address of the device name (like eth0, lo, em0, etc) |                   No                    |
+|              Source address field               | [Only for HTTP Request with HTTPClient implementation] This property is used to enable IP Spoofing. It overrides the default local IP address for this sample. The JMeter host must have multiple IP addresses (i.e. IP aliases, network interfaces, devices). The value can be a host name, IP address, or a network interface device such as “eth0” or “lo” or “wlan0”. If the property `httpclient.localaddress` is defined, that is used for all HttpClient requests. |                   No                    |
+
+<u>When using *Automatic Redirection*, cookies are only sent for the initial URL.</u> This can cause **unexpected behavior for websites that redirect to a local server**. E.g. if www.example.com redirects to www.example.co.uk. In this case the server will probably return cookies for both URLs, but JMeter will only see the cookies for the last host, i.e. www.example.co.uk. If the next request in the test plan uses www.example.com, rather than www.example.co.uk, it will not get the correct cookies. Likewise, <u>Headers are sent for the initial request, and won’t be sent for the redirect.</u> This is generally only a problem for manually created test plans, as a test plan created using a recorder would continue from the redirected URL.
+
+##### Parameter Handling
+
+For the POST and PUT method, if there is no file to send, and the name(s) of the parameter(s) are omitted, then the body is created by concatenating all the value(s) of the parameters. Note that the values are concatenated without adding any end-of-line characters. These can be added by using the `__char()` function in the value fields. This allows arbitrary bodies to be sent. The values are encoded if the encoding flag is set. See also the MIME Type above how you can control the content-type request header that is sent.
+
+For other methods, if the name of the parameter is missing, then the parameter is ignored. This allows the use of optional parameters defined by variables.
+
+You have the option to switch to Body Data tab when a request has only unnamed parameters (or no parameters at all). This option is useful in the following cases (amongst others):
+
+* GWT RPC HTTP Request
+* JSON REST HTTP Request
+* XML REST HTTP Request
+* SOAP HTTP Request
+
+Note that once you leave the Tree node, you cannot switch back to the parameter tab unless you clear the Body Data tab from its data.
+
+In Body Data mode, each line will be sent with CRLF appended, apart from the last line. To send a CRLF after the last line of data, just ensure that there is an empty line following it. (This cannot be seen, except by noting whether the cursor can be placed on the subsequent line.)
 
 
+
+##### Method Handling
+
+The GET, DELETE, POST, PUT and PATCH request methods work similarly, except that as of 3.1, only POST method supports multipart requests or file upload. The PUT and PATCH method body must be provided as one of the following:
+
+* define the body as a file with empty Parameter name field; in which case the MIME Type is used as the Content-Type
+* define the body as parameter value(s) with no name
+* use the Body Data tab
+
+The GET, DELETE and POST methods have an additional way of passing parameters by using the Parameters tab. GET, DELETE, PUT and PATCH require a Content-Type. If not using a file, attach a Header Manager to the sampler and define the Content-Type there.
+
+JMeter scan responses from embedded resources. It uses the property `HTTPResponse.parsers`, which is a list of parser ids, e.g. `htmlParser`, `cssParser` and `wmlParser`. For each id found, JMeter checks two further properties:
+
+* `id.types` - a list of content types
+* `id.className` - the parser to be used to extract the embedded resources
+
+See `jmeter.properties` file for the details of the settings. If the `HTTPResponse.parser` property is not set, JMeter reverts to the previous behavior, i.e. only text/html responses will be scanned.
+
+##### Emulating slow connections
+
+##### Response size calculation
+
+##### Retry handling
+
+##### Note: Certificates does not conform to algorithm constraints
+
+You may encounter the following error: 
+
+```shell
+java.security.cert.CertificateException: Certificates does not conform to algorithm constraints
+```
+
+if you run a HTTPS request on a website with a SSL certificate (itself or one of SSL certificates in its chain of trust) with a signature algorithm using MD2 (like `md2WithRSAEncryption`) or with a SSL certificate with a size lower than 1024 bits.
+
+This error is related to increased security in Java 8.
+
+To allow you to perform your HTTPS request, you can downgrade the security of your Java installation by editing the Java `jdk.certpath.disabledAlgorithms` property. Remove the MD2 value or the constraint on size, depending on your case. 
+
+This property is in this file: `JAVA_HOME/jre/lib/security/java.security`
 
 ### 18.2 Logic Controllers
 
