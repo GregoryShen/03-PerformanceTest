@@ -528,13 +528,13 @@ If you wish to modify the properties with which JMeter runs you need to either m
 
 ## 2. Building a Test Plan
 
-A test plan describes a series of steps JMeter will execute when run. A complete test plan will consist of one or more Thread Groups, logic controllers, sample generating controllers, listeners, timers, assertions, and configuration elements.
+A test plan describes a series of steps JMeter will execute when run. <u>A complete test plan will consist of one or more Thread Groups, logic controllers, sample generating controllers, listeners, timers, assertions, and configuration elements.</u>
 
 一个完整的测试计划应当包含一个或多个线程组, 逻辑控制器, 生成取样的控制器, 监听器, timers, 断言和配置元件.
 
 ### 2.1 Adding and Removing Elements
 
-Adding <u>elements to a test plan</u> can be done by right-clicking on an element in the tree, and choosing a new element from the “add” list. Alternatively, elements can be loaded from file and added by choosing the “merge” or “open” option.
+Adding elements to a test plan can be done by right-clicking on an element in the tree, and choosing a new element from the “add” list. Alternatively, <u>elements can be loaded from file and added by choosing the “merge” or “open” option</u>.
 
 To remove an element, make sure the element is selected, right-click on the element, and choose the “remove” option.
 
@@ -848,7 +848,7 @@ Hopefully these examples make it clear how configuration (hierarchical) elements
 
 ### 3.11 Properties and Variables
 
-JMeter *properties* are defined in `jmeter.properties` .
+JMeter properties are defined in `jmeter.properties` .
 
 Properties are global to jmeter, and are mostly used to define some of the defaults JMeter uses. For example the property `remote_hosts` defines the servers that JMeter will try to run remotely. Properties can be referenced in test plans - but cannot be used for thread-specific values.
 
@@ -1515,7 +1515,7 @@ Java gives you (for free) the custom networking, threading, and state management
 
 #### HTTP Request
 
-This sampler lets you send an HTTP/HTTPS request to a web server. It also lets you control whether or not JMeter parses HTML files for images and other embedded resources and sends HTTP requests to retrieve them. The following types of embedded resource are retrieved:
+This sampler lets you send an HTTP/HTTPS request to a web server. <u>It also lets you control whether or not JMeter parses HTML files for images and other embedded resources and sends HTTP requests to retrieve them.</u> The following types of embedded resource are retrieved:
 
 * images
 * applets
@@ -1525,7 +1525,7 @@ This sampler lets you send an HTTP/HTTPS request to a web server. It also lets y
 * background images(body, table, TD, TR)
 * background sound
 
-The default parser is `org.apache.jmeter.protocol.http.parser.LagartoBaseHtmlParser`. This can be changed by using the property “`htmlparser.className`”.
+The default parser is `org.apache.jmeter.protocol.http.parser.LagartoBaseHtmlParser`. This can be changed by using the property “`htmlparser.className`” - see `jmeter.properties` for details.
 
 If you are going to send multiple requests to the same web server, consider using an <u>HTTP Request Defaults</u>
 
@@ -1731,6 +1731,42 @@ The value displayed on the top left of graph is the max of 90^th^ percentile of 
 
 #### View Results Tree
 
+> ==View Results Tree MUST NOT BE USED during load test as it consumes a lot of resources (memory and CPU). Use it only for either functional testing or during Test Plan debugging and Validation.==
+
+The View Results Tree shows a tree of all sample responses, allowing you to view the response for any sample. In addition to showing the response, you can see the time it took to get this response, and some reponse codes. Note that the Request panel only shows the headers added by JMeter. It does not show any headers (such as Host) that may be added by the HTTP protocol implementation.
+
+「查看结果树」以树的形式展示了所有取样的响应结果, 你可以查看任何取样的响应结果. 除此之外, 你可以看到每个响应所花费的时间, 和响应状态码. 注意: Request 面板只展示JMeter添加的header, 不展示任何因为HTTP协议而添加的header(比如Host).
+
+There are several ways to view the response, selectable by a drop-down box at the bottom of the left hand panel.
+
+| Renderer | Description |
+| -------- | ----------- |
+|          |             |
+
+Scroll automatically? option permit to have last node display in tree selection
+
+> Starting with version 3.2 the number of entries in the View is restricted to the value of ther property `view.results.tree.max_results` which defaults to 500 entries. The old behavior can be restored by setting the property to 0. Beware, that this might consume a lot of memory.
+
+
+
+
+
+#### Aggregate Report
+
+The aggregate report creates a table row for each differently named request in your test. For each request, it totals the response information and provides request conut, min, max, average, error rate, approximate throughput (request/second) and Kilobytes per second throughput. Once the test is done, the throughput is the acutal through for the duration of the entire test.
+
+The throughput is calculated from the point of view of the sampler target (e.g. the remote server in the case of HTTP samples). JMeter takes into account <u>the total time</u> over *which <u>the requests have been generated</u>*. <u>If other samplers and timers are in the same thread, these will increase the total time, and therefore reduce the throughput value.</u> So ==two identical samplers with different names will have half the throughput of two samplers with the same name.== <u>It is important to choose the sampler names correctly to get the best results from the Aggregate Report.</u> 
+
+Calculation of the Median and 90% Line (90<sup>th</sup> percentile) values requires additional memory. JMeter now combines samples with the same elapsed time, so far less memory is used. However, for samples that take more than a few seconds, the probability is that fewer samples will have identical times, in which case more memory will be needed. Note <u>you can use this listener afterwards to reload a CSV or XML results file which is the recommended way to avoid performance impacts.</u> See the Summary Report for a similar Listener that does not store individual samples and so needs constant memory.
+
+> Starting with JMeter 2.12, you can configure the 3 percentile values you want to compute, this can be done by setting properties:
+>
+> * aggregate_rpt_pct1: defaults to 90<sup>th</sup> percentile
+> * aggregate_rpt_pct2: defaults to 95<sup>th</sup> percentile
+> * aggregate_rpt_pct3: defaults to 99<sup>th</sup> percentile
+
+
+
 
 
 #### Backend Listener
@@ -1739,29 +1775,169 @@ The value displayed on the top left of graph is the max of 90^th^ percentile of 
 
 ### 18.4 Configuration Elements
 
-Configuration elements can be used to set up defaults and variables for later use by samplers. Note that these elements are processed at the start of the scope in which they are found, i.e. before any samplers in the same scope.
+Configuration elements can be used to set up defaults and variables for later use by samplers. Note that ==these elements are processed at the start of the scope in which they are found, i.e. before any samplers in the same scope.==
 
 #### CSV Data Set Config
 
+
+
 #### HTTP Authorization Manager
 
+The Authorization Manager lets you <u>**specify one or more user logins for web pages** that are restricted using server authentication.</u> You see this type of authentication when you use your browser to access a restricted page, and your browser displays a login dialog box. <u>JMeter transmits the login information when it encounters this type of page.</u>
 
+<u>The Authorization headers **may not be shown in the Tree View Listener “Request” tab**</u>. The Java implementation does ==pre-emptive authentication==, but it does not return the Authorization header when JMeter fetches the headers. The HttpComponents(HC 4.5.X) implementation defaults to pre-emptive since 3.2 and the header will be shown. To disable this, set the values as below, in which case authentication will only be performed in response to a challenge.
+
+In the file `jmeter.properties` set `httpclient4.auth.preemptive=false`
+
+> Note: the above settings only apply to the HttpClient sampler.
+
+When looking for a match against a URL, JMeter checks each entry in turn, and stops when it finds the first match. Thus the most specific URLs should appear first in the list, followed by less specific ones. Duplicate URLs will be ignored. **If you want to use different usernames/passwords for different threads, you can use variables. These can be set up using a <u>CSV Data Set Config</u> Element.**
+
+> If there is more than one Authorization Manager in the scope of a Sampler, there is currently no way to specify which one is to be used.
+
+| Attribute                     | Description                                                  | Required |
+| ----------------------------- | ------------------------------------------------------------ | -------- |
+| Name                          | Descriptive name for this element that is shown in the tree. | No       |
+| Clear auth on each iteration? | Used by Kerberos authentication. If checked, authentication will be done on each iteration of Main Thread Group loop even if it has already been done in a previous one. This is usually useful if each main thread group iteration represents behavior of one Virtual User. | Yes      |
+| Base URL                      | A partial or complete URL that matches one or more HTTP Request URLs. As an example, say you specify a Base URL of “http://localhost/restricted/” with a Username of “jmeter” and a Password of “jmeter”. If you send an HTTP request to the URL “http://localhost/restricted/ant/myPage.html”, the Authorization Manager sends the login information for the user named, “jmeter”. | Yes      |
+| Username                      | The username to authorize.                                   | yes      |
+| Password                      | The password for the user. (N.B. this is stored unencrypted in the test plan) | Yes      |
+| Domain                        | The domain to use for NTLM.                                  | No       |
+| Realm                         | The realm to use for NTLM.                                   | No       |
+| Mechanism                     | Type of authentication to perform. JMeter can perform different types of authentications based on used Http Samplers:<br>Java<br>      BASIC<br>HttpClient 4<br>      BASIC, DIGEST and Kerberos | No       |
+
+> **The <u>Realm</u> only applies to the HttpClient sampler.**
+
+Kerberos Configuration: 略
+
+Controls:
+
+* `Add` Button - Add an entry to the authorization table.
+* `Delete` Button - Delete the currently selected table entry.
+* `Load` Button - Load a previouly saved authorization table and add the entries to the existing authorization table entires.
+* `Save As` Button - Save the current authorization table to a file.
+
+> When you save the Test Plan, JMeter automatically saves all of the authorization table entries - including any passwords, which are not encrypted.
+
+##### Authorization Example
+
+In this example, we created a Test Plan on a local server that sends three HTTP requests, two requiring a login and the other is open to everyone. See below to see the makeup of our Test Plan. On our server, we have a restricted directory named, “secret”, which contains two files, “index.html” and “index2.html”. 
+
+![](https://jmeter.apache.org/images/screenshots/http-config/auth-manager-example1a.png)
+
+We created a login id named, “kevin”, which has a password of “spot”. 
+
+![](https://jmeter.apache.org/images/screenshots/http-config/auth-manager-example1b.png)
+
+So, in our Authorization Manager, we created an entry for the restricted directory and a username and password. The two HTTP requests named “SecretPage1” and “SecretPage2” make requests to “/secret/index.html” and “/secret/index2.html”. The other HTTP request, named “NoSecretPage” makes a request to “/index.html”.
+
+When we run the Test Plan, JMeter looks in the Authorization table for the URL it is requesting. If the Base URL matches the URL, then JMeter passes this information along with the request.
 
 #### HTTP Cookie Manager
 
+The Cookie Manager element has <u>**two functions**</u>:
 
+**<u>First, it stores and sends cookies just like a web browser.</u>** <u>If you have an HTTP Request and the response contains a cookie, the Cookie Manager</u> ==automatically stores that cookie and will use it for all future requests to that particular website.== Each JMeter thread has its own “cookie storage area”. So, if you are testing a website that uses a cookie for storing session information, each JMeter thread will have its own session. Note that **such cookies do not appear on the Cookie Manager display, but they can be seen using the *<u>View Results Tree</u>* Listener**.
+
+JMeter checks that received cookies are valid for the URL. This means that ==cross-domain cookies are not stored==. If you have bugged behavior or want Cross-Domain cookies to be used, define the JMeter property “`CookieManager.check.cookies=false`”
+
+**Received Cookies can be stored as <u>JMeter thread variables</u>**. To save cookies as variables, define the property “`CookieManager.save.cookies=true`”. Also, cookies names are prefixed with “`COOKIE_`” before they are stored (this avoids accidental corruption of local variables). To revert to the original behavior, define the property “`CookieManager.name.prefix=`”(one or more spaces). If enabled, the value of a cookie with the name TEST can be referred to as `${COOKIE_TEST}`.
+
+**<u>Second, you can manually add a cookie to the Cookie Manager. However, if you do this, ==the cookie will be shared by all JMeter threads==.</u>**
+
+Note that such Cookies are created with an Expiration time far in the future.
+
+Cookies with null values are ignored by default. This can be changed by setting the JMeter property: `CookieManager.delete_null_cookies=false`. Note that this also applies to manually defined cookies - any such cookies will be removed from the display when it is updated. Note also that t<u>he cookie name must be unique - if a second cookie is defined with the same name, it will replace the first</u>.
+
+> **<u>If there is more than one Cookie Manager in the scope of a Sampler, there is currently no way to specify which one is to be used</u>**. Also, <u>**a cookie stored in one cookie manager is not available to any other manager**</u>, so use multiple Cookie Managers with care.
+
+| Attribute                    | Description                                                  | Required                                            |
+| ---------------------------- | ------------------------------------------------------------ | --------------------------------------------------- |
+| Name                         | Descriptive name for this element that is shown in the tree  | No                                                  |
+| Clear Cookies each Iteration | If selected, all server-defined cookies are cleared each time the main Thread Group loop is executed. Any cookie defined in the GUI are not cleared. | Yes                                                 |
+| Cookie Policy                | The cookie policy that will be used to manage the cookies. “standard” is the default since 3.0, and should work in most cases. [Note: “ignoreCookies” is equivalent to omitting the CookieManager] | Yes                                                 |
+| Implementation               | 5.4 现在已经没有这个选项了, 之前默认为 HC4CookieHandler(HttpClient 4.5.X API) | Yes                                                 |
+| User-Defined Cookies         | This gives you the opportunity to use hardcoded cookies that will be used by all threads during the test execution. The “domain” is the hostname of the server (without http://); the port is currently ignored. | No (discouraged, unless you know what you’re doing) |
+| Add Button                   | Add an entry to the cookie table                             | N/A                                                 |
+| Delete Button                | Delete the currently selected table entry                    | N/A                                                 |
+| Load Button                  | Load a previously saved cookie table and add the entries to the existing cookie table entries | N/A                                                 |
+| Save As Button               | Save the current cookie table to a file (does not save any cookies extracted from HTTP Responses). | N/A                                                 |
 
 #### HTTP Request Defaults
 
+This element lets you set default values that your HTTP Request controllers use. For example, if you are creating a Test Plan with 25 HTTP Request Controllers and all of the requests are being sent to the same server, you could add a single HTTP Request Defaults element with the “Server Name or IP” field filled in. Then, when you add the 25 HTTP Request controllers, leave the “Server Name or IP” field empty. The controllers will inherit this field value from the HTTP Request Defaults element.
 
+> All port values are treated equally; a sampler that does not specify a port will use the HTTP Request Defaults port, if one is provided.
+
+HTTP Request Advanced config fields
+
+| Attribute | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| Name      | Descriptive name for this element that is shown in the tree. | No       |
+| Server    | Domain name or IP address of the web server. E.g. www.example.com. [Do not include the `http://` prefix] | No       |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+
+Note: radio buttons only have two states - on or off. This makes it impossible to override settings consistently - does off mean off, or does it mean use the current default? JMeter uses the latter (otherwise defaults would not work at all). So if the button is off, then a later element can set it on, but if the button is on, a later element cannot set it off.
 
 #### HTTP Header Manager
+
+The Header Manager lets you add or override HTTP request headers.
+
+JMeter now supports multiple Header Managers. The header entries are merged to form the list for the sampler. If an entry to be merged matches an existing header name, it replaces the previous entry. This allows one to set up a default set of headers, and apply adjustments to particular samplers. Note that an empty value for a header does not remove an existing header, it justs replace its value.
+
+| Attribute    | Description                                                  | Required |
+| ------------ | ------------------------------------------------------------ | -------- |
+| Name         | Descriptive name for this element that is shown in the tree. | No       |
+| Name(Header) |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+|              |                                                              |          |
+
+
+
+#### User Defined Variables
+
+The User Defined Variables element lets you define an initial set of variables, just as in the Test Plan.
+
+> Note that all the UDV elements in a test plan - no matter where they are - are processed at the start.
+
+
+
+#### Random Variable
+
+The Random Variables Config Element is used to generate random numberic strings and store them in variable for use later. It’s simpler than using User Defined Variables together with the `__Random()` function.
+
+
 
 
 
 ### 18.5 Assertions
 
+#### Response Assertion
+
+
+
 ### 18.6 Timers
+
+
 
 ### 18.7 Pre Processors
 
@@ -1769,19 +1945,43 @@ Configuration elements can be used to set up defaults and variables for later us
 
 
 
+#### User Parameters
+
+
+
+#### BeanShell PreProcessor
+
+
+
 ### 18.8 Post-Processors
+
+#### XPath Extractor
+
+
+
+#### BeanShell PostProcessor
+
+
 
 ### 18.9 Miscellaneous Features
 
 #### Test Plan
 
+
+
 #### Thread Group
+
+
 
 #### WorkBench
 
 #### HTTP(S) Test Script Recorder
 
+
+
 #### Test Fragment
+
+
 
 #### setUp Thread Group
 
