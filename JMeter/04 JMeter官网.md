@@ -1865,33 +1865,33 @@ Cookies with null values are ignored by default. This can be changed by setting 
 
 #### HTTP Request Defaults
 
-This element lets you set default values that your HTTP Request controllers use. For example, if you are creating a Test Plan with 25 HTTP Request Controllers and all of the requests are being sent to the same server, you could add a single HTTP Request Defaults element with the “Server Name or IP” field filled in. Then, when you add the 25 HTTP Request controllers, leave the “Server Name or IP” field empty. The controllers will inherit this field value from the HTTP Request Defaults element.
+This element lets you <u>**set default values** that your HTTP Request controllers use</u>. For example, if you are creating a Test Plan with 25 HTTP Request Controllers and all of the requests are being sent to the same server, you could add a single HTTP Request Defaults element with the “Server Name or IP” field filled in. Then, when you add the 25 HTTP Request controllers, leave the “Server Name or IP” field empty. The controllers will inherit this field value from the HTTP Request Defaults element.
 
 > All port values are treated equally; a sampler that does not specify a port will use the HTTP Request Defaults port, if one is provided.
 
 HTTP Request Advanced config fields
 
-| Attribute | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| Name      | Descriptive name for this element that is shown in the tree. | No       |
-| Server    | Domain name or IP address of the web server. E.g. www.example.com. [Do not include the `http://` prefix] | No       |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
+| Attribute        | Description                                                  | Required |
+| ---------------- | ------------------------------------------------------------ | -------- |
+| Name             | Descriptive name for this element that is shown in the tree. | No       |
+| Server           | Domain name or IP address of the web server. E.g. www.example.com. [Do not include the `http://` prefix] | No       |
+| Port             | Port the web server is listening to.                         | No       |
+| Connect Timeout  | Connection Timeout. Number of milliseconds to wait for a connection to open. | No       |
+| Response Timeout | Response Timeout. Number of milliseconds to wait for a response. |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
+|                  |                                                              |          |
 
 Note: radio buttons only have two states - on or off. This makes it impossible to override settings consistently - does off mean off, or does it mean use the current default? JMeter uses the latter (otherwise defaults would not work at all). So if the button is off, then a later element can set it on, but if the button is on, a later element cannot set it off.
 
