@@ -968,7 +968,7 @@ To do this in JMeter, add a HTTP Request, and set the method to POST. You’ll n
 
 ### 4.7 choose the same user or different users
 
-When creating a Test Plan, on each Thread Group iteration, we can choose to simulate the same user running multiple iterations, or different users running one iteration. You can configure this behaviour on Thread Group element, and have HTTP Cache Manager, HTTP Cookie Manager, HTTP Authorization Manager controlled by this setting.
+When creating a Test Plan, on each Thread Group iteration, we can choose to simulate the same user running multiple iterations, or different users running one iteration. You can configure this behavior on Thread Group element, and have HTTP Cache Manager, HTTP Cookie Manager, HTTP Authorization Manager controlled by this setting.
 
 当创建一个Test Plan时, 在每个Thread Group循环的时候, 我们可以选择同一批用户反复循环, 还是不同用户跑一个循环. 
 
@@ -1006,7 +1006,7 @@ If you only wish to record certain samples, add the Listener as a child of the s
 
 The default items to be saved can be defined in the `jmeter.properties` (or `user.properties`) file. The properties are used as the initial settings for the Listener Config pop-up, and are also used for the log file specified by the `-l` command-line flag (commonly used for CLI mode test runs).
 
-To change the default format, find the following line in jmeter.properties:
+To change the default format, find the following line in `jmeter.properties`:
 
 ```shell
 jmeter.save.saveservice.output_format=
@@ -1023,7 +1023,7 @@ timeStamp|time|label|responseCode|threadName|dataType|success|failureMessage
     expected to contain: password etc.
 ```
 
-The corresponding jmeter.properties that need to be set are shown below. One oddity in this example is that the output_format is set to csv, which typically indicates comma-separated values. However, the default_delimiter was set to be a vertical bar instead of a comma, so the csv tag is a misnomer in this case. (Think of CSV as meaning character separated values)
+The corresponding `jmeter.properties` that need to be set are shown below. One oddity in this example is that the output_format is set to CSV, which typically indicates comma-separated values. However, the default_delimiter was set to be a vertical bar instead of a comma, so the CSV tag is a misnomer in this case. (Think of CSV as meaning character separated values)
 
 ```properties
 jmeter.save.saveservice.output_format=csv
@@ -1035,9 +1035,9 @@ jmeter.save.saveservice.default_delimiter=|
 
 #### 12.1.1 Sample Variables
 
-JMeter supports the `sample_variables` property to define a list of addtional JMeter variables which are to be saved with each sample in the JTL files. The values are written to CSV files as addtional columns, and as addtional attributes in XML files. See above for an example.
+JMeter supports the `sample_variables` property to define a list of additional JMeter variables which are to be saved with each sample in the JTL files. The values are written to CSV files as additional columns, and as additional attributes in XML files. See above for an example.
 
-#### 12.1.2 Sample Result Save Configuraion
+#### 12.1.2 Sample Result Save Configuration
 
 Listeners can be configured to save different items to the result log files(JTL) by using the Config popup as shown below. The defaults are defined as described in the Listener Default Configuration section above. Items with (CSV) after the name only apply to the CSV format; items with (XML) only apply to XML format. CSV format cannot currently be used to save any items that include line-breaks.
 
@@ -1081,7 +1081,7 @@ To minimize the amount of memory needed, use the Simple Data Writer, and use the
 
 ### 12.4 CSV Log format
 
-The CSV log format depends on which data items are selected in the configuraion. Only the specified data items are recorded in the file. The order of appearance of columns is fixed, and is as follows:
+The CSV log format depends on which data items are selected in the configuration. Only the specified data items are recorded in the file. The order of appearance of columns is fixed, and is as follows:
 
 * timeStamp - in milliseconds since 1/1/1970
 * elapsed - in milliseconds
@@ -1146,7 +1146,7 @@ The sample attributes have the following meaning:
 | ts        | timeStamp (milliseconds since midnight Jan 1, 1970 UTC)      |
 | varname   | Value of he named variable                                   |
 
-> JMeter allows additional variables to be saved with the test plan. Currently, the variables are saved as addtional attributes. The testplan variable name is used as the attribute name. See <u>Sample variables</u> for more information.
+> JMeter allows additional variables to be saved with the test plan. Currently, the variables are saved as additional attributes. The test-plan variable name is used as the attribute name. See <u>Sample variables</u> for more information.
 
 ### 12.8 Saving response data
 
@@ -1156,9 +1156,9 @@ Another solution is to use the Post-Processor <u>Save Responses to a file</u>. T
 
 ### 12.9 Loading(reading) response data
 
-To view an existing results file, you can use the File “Browse…” button to select a file. If necessary, just create a dummy testplan with the appropriate Listener in it.
+To view an existing results file, you can use the File “Browse…” button to select a file. If necessary, just create a dummy test-plan with the appropriate Listener in it.
 
-Results can be read from XML or CSV format files. When reading from CSV results files, the header (if present) is used to determine which fields were saved. <u>In order to interpret a header-less CSV file correctly, the appropriate JMeter properites must be set.</u>
+Results can be read from XML or CSV format files. When reading from CSV results files, the header (if present) is used to determine which fields were saved. <u>In order to interpret a header-less CSV file correctly, the appropriate JMeter properties must be set.</u>
 
 > JMeter does not clear any current data before loading the new file thus allowing files to be merged. If you want to clear the current data, use the menu item: Run-> Clear(Ctrl+Shift+E) or Run->Clear All(Ctrl+E) before loading the file.
 
@@ -1214,7 +1214,7 @@ This report provides the following metrics:
 	
 	* Latencies Over Time(Includes Transaction Controller Sample Results):
 	
-	* Connect Time Over TIme (Includes Transaction Controller Sample Results):
+	* Connect Time Over Time (Includes Transaction Controller Sample Results):
 	
 	* Hits per second (Ignores Transaction Controller Sample Results):
 	
@@ -1240,7 +1240,7 @@ This report provides the following metrics:
 
 Dashboard generation uses JMeter properties to customize the report. Some properties are used for general settings and others are used for a particular graph configuration or exporter configuration.
 
-> All report generator properites can be found in file `reportgenerator.properties`. To customize these properties, you should copy them in `user.properties` file and modify them.
+> All report generator properties can be found in file `reportgenerator.properties`. To customize these properties, you should copy them in `user.properties` file and modify them.
 
 #### 14.2.1 Requirements
 
@@ -1256,7 +1256,7 @@ jmeter.reportgenerator.exporter.html.series_filter=^(Search|Order)(-success|-fai
 
 ##### 14.2.1.2 Save Service configuration
 
-To enable the generator to operate, the CSV file generaterd by JMeter must include certain required data which <u>are correct by default in the last live version</u> of JMeter.
+To enable the generator to operate, the CSV file generated by JMeter must include certain required data which <u>are correct by default in the last live version</u> of JMeter.
 
 If you modified those settings, check that your JMeter configuration follows these settings (these are the defaults):
 
@@ -1733,7 +1733,7 @@ The value displayed on the top left of graph is the max of 90^th^ percentile of 
 
 > ==View Results Tree MUST NOT BE USED during load test as it consumes a lot of resources (memory and CPU). Use it only for either functional testing or during Test Plan debugging and Validation.==
 
-The View Results Tree shows a tree of all sample responses, allowing you to view the response for any sample. In addition to showing the response, you can see the time it took to get this response, and some reponse codes. Note that the Request panel only shows the headers added by JMeter. It does not show any headers (such as Host) that may be added by the HTTP protocol implementation.
+The View Results Tree shows a tree of all sample responses, allowing you to view the response for any sample. In addition to showing the response, you can see the time it took to get this response, and some response codes. Note that the Request panel only shows the headers added by JMeter. It does not show any headers (such as Host) that may be added by the HTTP protocol implementation.
 
 「查看结果树」以树的形式展示了所有取样的响应结果, 你可以查看任何取样的响应结果. 除此之外, 你可以看到每个响应所花费的时间, 和响应状态码. 注意: Request 面板只展示JMeter添加的header, 不展示任何因为HTTP协议而添加的header(比如Host).
 
@@ -1745,7 +1745,7 @@ There are several ways to view the response, selectable by a drop-down box at th
 
 Scroll automatically? option permit to have last node display in tree selection
 
-> Starting with version 3.2 the number of entries in the View is restricted to the value of ther property `view.results.tree.max_results` which defaults to 500 entries. The old behavior can be restored by setting the property to 0. Beware, that this might consume a lot of memory.
+> Starting with version 3.2 the number of entries in the View is restricted to the value of the property `view.results.tree.max_results` which defaults to 500 entries. The old behavior can be restored by setting the property to 0. Beware, that this might consume a lot of memory.
 
 
 
@@ -1753,7 +1753,7 @@ Scroll automatically? option permit to have last node display in tree selection
 
 #### Aggregate Report
 
-The aggregate report creates a table row for each differently named request in your test. For each request, it totals the response information and provides request conut, min, max, average, error rate, approximate throughput (request/second) and Kilobytes per second throughput. Once the test is done, the throughput is the acutal through for the duration of the entire test.
+The aggregate report creates a table row for each differently named request in your test. For each request, it totals the response information and provides request count, min, max, average, error rate, approximate throughput (request/second) and Kilobytes per second throughput. Once the test is done, the throughput is the actual through for the duration of the entire test.
 
 The throughput is calculated from the point of view of the sampler target (e.g. the remote server in the case of HTTP samples). JMeter takes into account <u>the total time</u> over *which <u>the requests have been generated</u>*. <u>If other samplers and timers are in the same thread, these will increase the total time, and therefore reduce the throughput value.</u> So ==two identical samplers with different names will have half the throughput of two samplers with the same name.== <u>It is important to choose the sampler names correctly to get the best results from the Aggregate Report.</u> 
 
@@ -1778,6 +1778,49 @@ Calculation of the Median and 90% Line (90<sup>th</sup> percentile) values requi
 Configuration elements can be used to set up defaults and variables for later use by samplers. Note that ==these elements are processed at the start of the scope in which they are found, i.e. before any samplers in the same scope.==
 
 #### CSV Data Set Config
+
+CSV Data Set Config is used to <u>read lines from a file, and split them into variables</u>. It is easier to use than the `__CSVRead()` and `__StringFromFile()` functions. It is well suited to handling large numbers of variables, and is also useful for testing with “random” and unique values.
+
+Generating unique random values at run-time is expensive in terms of CPU and memory, so just create the data in advance of the test. If necessary, the “random” data from the file can be used in conjunction with a run-time parameter to create different sets of values from each run - e.g. using concatenation - which is much cheaper than generating everything at run-time.
+
+JMeter allows values to be quoted; this allows the value to contain a delimiter. If “allow quoted data” is enabled, a value may be enclosed in double-quotes. These are removed. To include double-quotes within a quoted field, use two double-quotes. For example:
+
+```bash
+1,"2,3","4,5" =>
+1
+2,3
+4"5
+```
+
+JMeter supports CSV files which have a header line defining the column names. To enable this, leave the “Variable Names” field empty. The correct delimiter must be provided.
+
+JMeter supports CSV files with quoted data that includes new-lines.
+
+By default, the file is only opened once, and each thread will use a different line from the file. However the order in which lines are passed to threads depends on the order in which they execute, which may vary between iterations. Lines are read at the start of each test iteration. The file name and mode are resolved in the first iteration.
+
+See the description of the Share mode below for additional options. If you want each thread to have its own set of values, then you will need to create a set of files, one for each thread. For example `test1.csv`, `test2.csv`, …, `testn.csv`. Use the filename `test${__threadNum}.csv` and set the “Sharing mode” to “Current thread”.
+
+> CSV Dataset variables are defined at the start of each test iteration. As this is after configuration processing is completed, they cannot be used for some configuration items - such as JDBC Config - that  process their contents at configuration time. However the variables do work in the HTTP Auth Manager, as the username etc. are processed at run-time.
+
+As a special case, the string `“\t”`(without quotes) in the delimiter field is treated as a Tab.
+
+When the end of file (EOF) is reached, and the recycle option is true, reading starts again with the first line of the file.
+
+If the recycle option is false, and stop Thread is false, then all the variables are set to `<EOF>` when the end of file is reached. This value can be changed by setting the JMeter property `csvdataset.eofstring`.
+
+If the Recycle option is false, and Stop Thread is true, then reaching EOF will cause the thread to be stopped.
+
+| Attribute | Description                                                  | Required |
+| --------- | ------------------------------------------------------------ | -------- |
+| Name      | Descriptive name for this element that is shown in the tree. |          |
+| Filename  | Name of the file to be read. Relative file names are resolved with respect to the path of the active test plan. For distributed testing, the CSV file must be stored on the server host system in the correct relative directory to where the JMeter server is started. Absolute file names are also supported, but note they are unlikely to work in remote mode, unless the remote server has the same directory structure. If the same physical file is referenced in two different ways - e.g. `csvdata.txt` and `./csvdata.txt` - then these are treated as different files. If the OS does not distinguish between upper and lower case, `csvData.TXT` would also be opened separately. | Yes      |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
+|           |                                                              |          |
 
 
 
@@ -1814,14 +1857,14 @@ Controls:
 
 * `Add` Button - Add an entry to the authorization table.
 * `Delete` Button - Delete the currently selected table entry.
-* `Load` Button - Load a previouly saved authorization table and add the entries to the existing authorization table entires.
+* `Load` Button - Load a previously saved authorization table and add the entries to the existing authorization table entires.
 * `Save As` Button - Save the current authorization table to a file.
 
 > When you save the Test Plan, JMeter automatically saves all of the authorization table entries - including any passwords, which are not encrypted.
 
 ##### Authorization Example
 
-In this example, we created a Test Plan on a local server that sends three HTTP requests, two requiring a login and the other is open to everyone. See below to see the makeup of our Test Plan. On our server, we have a restricted directory named, “secret”, which contains two files, “index.html” and “index2.html”. 
+In this example, we created a Test Plan on a local server that sends three HTTP requests, two requiring a login and the other is open to everyone. See below to see the makeup of our Test Plan. On our server, we have a restricted directory named, “secret”, which contains two files, “`index.html`” and “`index2.html`”. 
 
 ![](https://jmeter.apache.org/images/screenshots/http-config/auth-manager-example1a.png)
 
@@ -1829,7 +1872,7 @@ We created a login id named, “kevin”, which has a password of “spot”.
 
 ![](https://jmeter.apache.org/images/screenshots/http-config/auth-manager-example1b.png)
 
-So, in our Authorization Manager, we created an entry for the restricted directory and a username and password. The two HTTP requests named “SecretPage1” and “SecretPage2” make requests to “/secret/index.html” and “/secret/index2.html”. The other HTTP request, named “NoSecretPage” makes a request to “/index.html”.
+So, in our Authorization Manager, we created an entry for the restricted directory and a username and password. The two HTTP requests named “`SecretPage1`” and “`SecretPage2`” make requests to “`/secret/index.html`” and “`/secret/index2.html`”. The other HTTP request, named “`NoSecretPage`” makes a request to “`/index.html`”.
 
 When we run the Test Plan, JMeter looks in the Authorization table for the URL it is requesting. If the Base URL matches the URL, then JMeter passes this information along with the request.
 
@@ -1855,7 +1898,7 @@ Cookies with null values are ignored by default. This can be changed by setting 
 | ---------------------------- | ------------------------------------------------------------ | --------------------------------------------------- |
 | Name                         | Descriptive name for this element that is shown in the tree  | No                                                  |
 | Clear Cookies each Iteration | If selected, all server-defined cookies are cleared each time the main Thread Group loop is executed. Any cookie defined in the GUI are not cleared. | Yes                                                 |
-| Cookie Policy                | The cookie policy that will be used to manage the cookies. “standard” is the default since 3.0, and should work in most cases. [Note: “ignoreCookies” is equivalent to omitting the CookieManager] | Yes                                                 |
+| Cookie Policy                | The cookie policy that will be used to manage the cookies. “standard” is the default since 3.0, and should work in most cases. [Note: “`ignoreCookies`” is equivalent to omitting the CookieManager] | Yes                                                 |
 | Implementation               | 5.4 现在已经没有这个选项了, 之前默认为 HC4CookieHandler(HttpClient 4.5.X API) | Yes                                                 |
 | User-Defined Cookies         | This gives you the opportunity to use hardcoded cookies that will be used by all threads during the test execution. The “domain” is the hostname of the server (without http://); the port is currently ignored. | No (discouraged, unless you know what you’re doing) |
 | Add Button                   | Add an entry to the cookie table                             | N/A                                                 |
@@ -1923,7 +1966,7 @@ The User Defined Variables element lets you define an initial set of variables, 
 
 #### Random Variable
 
-The Random Variables Config Element is used to generate random numberic strings and store them in variable for use later. It’s simpler than using User Defined Variables together with the `__Random()` function.
+The Random Variables Config Element is used to generate random numeric strings and store them in variable for use later. It’s simpler than using User Defined Variables together with the `__Random()` function.
 
 
 
