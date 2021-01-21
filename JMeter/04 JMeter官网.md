@@ -1662,8 +1662,6 @@ Note that once you leave the Tree node, you cannot switch back to the parameter 
 
 In Body Data mode, each line will be sent with CRLF appended, apart from the last line. To send a CRLF after the last line of data, just ensure that there is an empty line following it. (This cannot be seen, except by noting whether the cursor can be placed on the subsequent line.)
 
-
-
 ##### Method Handling
 
 The GET, DELETE, POST, PUT and PATCH request methods work similarly, except that as of 3.1, only POST method supports multipart requests or file upload. The PUT and PATCH method body must be provided as one of the following:
@@ -1810,19 +1808,18 @@ If the recycle option is false, and stop Thread is false, then all the variables
 
 If the Recycle option is false, and Stop Thread is true, then reaching EOF will cause the thread to be stopped.
 
-| Attribute | Description                                                  | Required |
-| --------- | ------------------------------------------------------------ | -------- |
-| Name      | Descriptive name for this element that is shown in the tree. |          |
-| Filename  | Name of the file to be read. Relative file names are resolved with respect to the path of the active test plan. For distributed testing, the CSV file must be stored on the server host system in the correct relative directory to where the JMeter server is started. Absolute file names are also supported, but note they are unlikely to work in remote mode, unless the remote server has the same directory structure. If the same physical file is referenced in two different ways - e.g. `csvdata.txt` and `./csvdata.txt` - then these are treated as different files. If the OS does not distinguish between upper and lower case, `csvData.TXT` would also be opened separately. | Yes      |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-|           |                                                              |          |
-
-
+| Attribute                        | Description                                                  | Required |
+| -------------------------------- | ------------------------------------------------------------ | -------- |
+| Name                             | Descriptive name for this element that is shown in the tree. |          |
+| Filename                         | Name of the file to be read. Relative file names are resolved with respect to the path of the active test plan. For distributed testing, the CSV file must be stored on the server host system in the correct relative directory to where the JMeter server is started. Absolute file names are also supported, but note they are unlikely to work in remote mode, unless the remote server has the same directory structure. If the same physical file is referenced in two different ways - e.g. `csvdata.txt` and `./csvdata.txt` - then these are treated as different files. If the OS does not distinguish between upper and lower case, `csvData.TXT` would also be opened separately. | Yes      |
+| File Encoding                    | The encoding to be used to read the file, if not the platform default. | No       |
+| Variable Names                   | List of variable names. The names must be separated by the delimiter character. They can be quoted using double-quotes. JMeter supports CSV header lines: if the variable name field empty, then the first line of the file is read and interpreted as the list of column names. | No       |
+| Use first line as Variable Names | Ignore first line of CSV file, it will only be used if Variable Names is not empty, if Variable Names is empty the first line must contain the headers. | No       |
+| Delimiter                        | Delimiter to be used to split the records in the file. If there are fewer values on the line than there are variables the remaining variables are not updated - so they will retain their previous value (if any). | Yes      |
+| Allow quoted data?               | Should the CSV file allow values to be quoted? If enabled, then values can be enclosed in `“` - double-quote - allowing values to contain a delimiter. | Yes      |
+| Recycle on EOF?                  | Should the file be re-read from the beginning on reaching EOF?(default is true) | Yes      |
+| Stop thread on EOF?              | Should the thread be stopped on EOF, if Recycle is false?    | Yes      |
+| Sharing mode                     | * All threads - (the default) the file is shared between all the threads.<br>* Current thread group - each file is opened once for each thread group in which the element appears<br>* Current thread - each file is opened separately for each thread<br>* Identifier - all threads sharing the same identifier share the same file. So for example if you have 4 thread groups, you could use a common id for two or more of the groups to share the file between the same thead numbers in different thread groups. | Yes      |
 
 #### HTTP Authorization Manager
 
@@ -1914,27 +1911,27 @@ This element lets you <u>**set default values** that your HTTP Request controlle
 
 HTTP Request Advanced config fields
 
-| Attribute        | Description                                                  | Required |
-| ---------------- | ------------------------------------------------------------ | -------- |
-| Name             | Descriptive name for this element that is shown in the tree. | No       |
-| Server           | Domain name or IP address of the web server. E.g. www.example.com. [Do not include the `http://` prefix] | No       |
-| Port             | Port the web server is listening to.                         | No       |
-| Connect Timeout  | Connection Timeout. Number of milliseconds to wait for a connection to open. | No       |
-| Response Timeout | Response Timeout. Number of milliseconds to wait for a response. |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
-|                  |                                                              |          |
+| Attribute                                       | Description                                                  | Required                               |
+| ----------------------------------------------- | ------------------------------------------------------------ | -------------------------------------- |
+| Name                                            | Descriptive name for this element that is shown in the tree. | No                                     |
+| Server                                          | Domain name or IP address of the web server. E.g. www.example.com. [Do not include the `http://` prefix] | No                                     |
+| Port                                            | Port the web server is listening to.                         | No                                     |
+| Connect Timeout                                 | Connection Timeout. Number of milliseconds to wait for a connection to open. | No                                     |
+| Response Timeout                                | Response Timeout. Number of milliseconds to wait for a response. | No                                     |
+| Implementation                                  | java, HttpClinet4. If not specified the default depends on the value of JMeter property `jmeter.httpsampler`, failing that, the Java implementation is used. | No                                     |
+| Protocol                                        | HTTP or HTTPS                                                | No                                     |
+| Content encoding                                | The encoding to be used for the request.                     | No                                     |
+| Path                                            | The path to resource(for example, `/servlets/myServlet`). If the response requires query string parameters, add them below in the “Send Parameters With the Request” section. Note that the path is the default for the full path, not a prefix to be applied to paths specified on the HTTP Request screens. | No                                     |
+| Send Parameters With the Request                | The query string will be generated from the list of parameters you provide. Each parameter has a name and value. The query string will be generated in the correct fashion, depending on the choice of “Method” you made(i.e. if you chose GET, the query string will be appended to the URL, if POST, then it will be sent separately). Also, if you are sending a file using a multipart form, the query string will be created using the multipart form specifications. | No                                     |
+| Server(proxy)                                   | Hostname or IP address of a proxy server to perform request.[Do not include the http:// prefix] | No                                     |
+| Port                                            | Port the proxy server is listenling to.                      | No, unless proxy hostname is specified |
+| Username                                        | (Optional) username for proxy server.                        | No                                     |
+| Password                                        | (Optional) password for proxy server. (N.B. this is stored unencrypted in the test plan) | No                                     |
+| Retrieve All Embedded Resources from HTML Files | Tell JMeter to parse the HTML file and send HTTP/HTTPS requests for all images, Java applets, JavaScript files, CSSs, etc. referenced in the file. | No                                     |
+| Use concurrent pool                             | Use a pool of concurrent connections to get embedded resources. | No                                     |
+| Size                                            | Pool size for concurrent connections used to get embedded resources. | No                                     |
+| URLs must match                                 | If present, this must be a regular expression that is used to match against any embedded URLs found. So if you only want to download embedded resources from `http://example.invalid/`, use the expression: `http://example\.invalid/.*` | No                                     |
+| URLs must not match                             | If present, this must be a regular expression that is used to filter out any embedded URLs found. So if you don’t want to download PNG or SVG files from any source, use the expression: `.*\.(?i:svg|png)` | No                                     |
 
 Note: radio buttons only have two states - on or off. This makes it impossible to override settings consistently - does off mean off, or does it mean use the current default? JMeter uses the latter (otherwise defaults would not work at all). So if the button is off, then a later element can set it on, but if the button is on, a later element cannot set it off.
 
@@ -1942,35 +1939,76 @@ Note: radio buttons only have two states - on or off. This makes it impossible t
 
 The Header Manager lets you add or override HTTP request headers.
 
-JMeter now supports multiple Header Managers. The header entries are merged to form the list for the sampler. If an entry to be merged matches an existing header name, it replaces the previous entry. This allows one to set up a default set of headers, and apply adjustments to particular samplers. Note that an empty value for a header does not remove an existing header, it justs replace its value.
+<u>JMeter now supports multiple Header Managers.</u> **The header entries are merged to form the list for the sampler.** If an entry to be merged matches an existing header name, it replaces the previous entry. This allows one to set up a default set of headers, and apply adjustments to particular samplers. Note that an empty value for a header does not remove an existing header, it justs replace its value.
 
-| Attribute    | Description                                                  | Required |
-| ------------ | ------------------------------------------------------------ | -------- |
-| Name         | Descriptive name for this element that is shown in the tree. | No       |
-| Name(Header) |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
+| Attribute      | Description                                                  | Required                                  |
+| -------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| Name           | Descriptive name for this element that is shown in the tree. | No                                        |
+| Name(Header)   | Name of the request header. Two common request headers you may want to experiment with are “User-Agent” and “Referer”. | No(You should have at least one, however) |
+| Value          | Request header value.                                        | No(You should have at least one, however) |
+| Add Button     | Add an entry to the header table.                            | N/A                                       |
+| Delete Button  | Delete the currently selected table entry.                   | N/A                                       |
+| Load Button    | Load a previouly saved header table and add the entries to the existing header table entries. | N/A                                       |
+| Save As Button | Save the current header table to a file.                     | N/A                                       |
+
+##### Header Manager example
+
+In this example, we created a Test Plan that tells JMeter to override the default “User-Agent” request header and use a particular Internet Explorer agent string instead.
+
+![](https://jmeter.apache.org/images/screenshots/http-config/header-manager-example1a.png)
+
+![](https://jmeter.apache.org/images/screenshots/http-config/header-manager-example1b.png)
 
 
 
 #### User Defined Variables
 
-The User Defined Variables element lets you define an initial set of variables, just as in the Test Plan.
+The User Defined Variables element lets you define an **initial set of variables**, just as in the Test Plan.
 
 > Note that all the UDV elements in a test plan - no matter where they are - are processed at the start.
 
+So you cannot reference variables which are defined as part of a test run, e.g. in a Post-Processor.
 
+UDVs should not be used with functions that generate different results each time they are called. Only the result of the first function call will be saved in the variable. However, UDVs can be used with functions such as `__P()`, for example:
+
+```shell
+HOST		${__P(host,localhost)}
+```
+
+which would define the variable “HOST” to have the value of the JMeter property “host”, defaulting to “localhost” if not defined.
+
+For defining variables during a test run, see User Parameters. UDVs are processed in the order they appear in the Plan, from top to bottom.
+
+For simplicity, it is suggested that UDVs are placed only at the start of a Thread Group(or perhaps under the Test Plan itself).
+
+Once the Test Plan and all UDVs have been processed, the resulting set of variables is copied to each thread to provide the initial set of variables.
+
+If a runtime element such as a User Parameters Pre-Processor or Regular Expression Extractor defines a variable with the same name as one of the UDV variables, then this will replace the initial value, and all other test elements in the thread will see the updated value.
+
+> If you have more than one Thread Group, make sure you use different names for different values, as UDVs are shared between Thread Groups. Also, the variables are not available for use until after the element has been processed, so you cannot reference variables that are defined in the same element. You can reference variables defined in earlier UDVs or on the Test Plan.
+
+| Attribute              | Description                                                  | Required |
+| ---------------------- | ------------------------------------------------------------ | -------- |
+| Name                   | Descriptive name for this element that is shown in the tree. |          |
+| User Defined Variables | Variable name/value pairs. The string under the “Name” column is what you’ll need to place inside the brackets in `${...}` constructs to use the variables later on. The whole `${...}` will then be replaced by the string in the “Value” column. |          |
 
 #### Random Variable
 
 The Random Variables Config Element is used to generate random numeric strings and store them in variable for use later. It’s simpler than using User Defined Variables together with the `__Random()` function.
 
+The output variable is constructed by using the random number generator, and then the resulting number is formatted using the format string. The number is calculated using the formula `minimun+Random.nextInt(maximum-minimum+1)`. `Random.nextInt()` requires a positive integer. This means that maximum-minimum - i.e. the range - must be less than 2147483647, however the minimum and maximum values can be any long values so long as the range is OK.
 
+> As the random value is evaluted at the start of each iteration, it is probably not a good idea to use a variable other than a property as a value for the mimimum or maximum. It would be zero on the first iteration.
 
-
+| Attribute         | Description                                                  | Required |
+| ----------------- | ------------------------------------------------------------ | -------- |
+| Name              | Descriptive name for this element that is shown in the tree. | Yes      |
+| Variable Name     | The name of the variable in which to store the random string. | Yes      |
+| Format String     | The `java.text.DecimalFormat` format string to be used. For example “000” which will generate numbers with at least 3 digits, or “USER_000” which will generate output of the form USER_nnn. If not specified, the default is to generate the number using `Long.toString()` | No       |
+| Minimum Value     | The minimum value (long) of the generated random number.     | Yes      |
+| Maximum Value     | The maximum value (long) of the generated random number.     | Yes      |
+| Random Seed       | The seed for the random number generator. If you use the same seed value with Per Thread set to true, you will get the same value for each Thread as per Random class. If no seed is set, Default constructor of Random will be used. | No       |
+| Per Thread(User)? | If False, the generator is shared between all threads in the thread group. If True, then each thread has its own random generator. | Yes      |
 
 ### 18.5 Assertions
 
@@ -1985,6 +2023,20 @@ The Random Variables Config Element is used to generate random numeric strings a
 ### 18.7 Pre Processors
 
 #### HTTP URL Re-writing Modifier
+
+This modifier works similarly to the HTML Link Parser, except it has a specifc purpose for which it is easier to use than the HTML Link Parser, and more efficient. For <u>web applications that ==use URL Re-writing to store session ids instead of cookies==, this element can be ==attached at the ThreadGroup level==, much like the HTTP Cookie Manager.</u> Simply give it the name of the session id parameter, and it will find it on the page and add the argument to every request of that ThreadGroup.
+
+Alternatively, this modifier can be attached to select requests and it will modify only them. Clever users will even deternime that this modifier can be used to grab values that elude the HTML Link Parser.
+
+| Attribute                                 | Description                                                  | Required |
+| ----------------------------------------- | ------------------------------------------------------------ | -------- |
+| Name                                      | Descriptive name given to this element in the test tree.     | No       |
+| Session Argument Name                     | The name of the parameter to grab from previous response. This modifier will find the parameter anywhere it exists on the page, and grab the value assigned to it, whether it’s in an HREF or a form. | Yes      |
+| Path Extension                            | Some web apps rewrite URLs by appending a semi-colon plus the session id parameter. Check this box if that is so. | No       |
+| Do not use equals in path extension       | Some web apps rewrite URLs without using an “=” sign between the parameter name and value (such as Intershop Enfinity) | No       |
+| Do not use questionmark in path extension | Prevents the query string to end up in the path extension(such as Intershop Enfinity). | No       |
+| Cache Session Id?                         | Should the value of the session Id be saved for later use when the session Id is not present? | Yes      |
+| URL Encode                                | URL Encode value when writing parameter                      | No       |
 
 
 
@@ -2003,6 +2055,10 @@ The Random Variables Config Element is used to generate random numeric strings a
 
 
 #### BeanShell PostProcessor
+
+
+
+#### JSON Extractor
 
 
 
