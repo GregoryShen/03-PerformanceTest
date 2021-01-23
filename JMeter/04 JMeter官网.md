@@ -494,15 +494,29 @@ Here is an example `log4j2.xml` file which defines two log appenders and loggers
 
 Invoking JMeter as “jmeter -?” will print a list of all the command-line options. These are shown below.
 
-```shell
+```bash
+--?
+	print command line options and exit
+-h, --help
+	print usage information and exit
+-v, --version
+	print the version information and exit
+-p, --propfile <argument>
+	the jmeter property file to use
 
 ```
 
 
 
+Note: the JMeter log file name is formatted as a SimpleDateFormat(applied to the current date) if it contains paired single quotes. e.g. `jmeter_'yyyyMMddHHmmss'.log`
+
+If the special name `LAST` is used for the `-t`, `-j` or `-l` flags, then JMeter takes that to mean last test plan that was run in interactive mode.
+
 #### 1.4.9 CLI mode shutdown
 
+Prior to version 2.5.1, JMeter invoked `System.exit()` when a CLI mode test completed. This caused problems for applications that invoke JMeter directly, so JMeter no longer invokes `System.exit()` for a normal test completion[^2]. JMeter will exit all the non-daemon threads it starts, but it is possible that some non-daemon threads may still remain; these will prevent the JVM from exiting. To detect this situation, JMeter starts a new daemon thread just before it exits. This daemon thread waits a shrot while; if it returns from the wait, then clearly the JVM has not been able to exit, and the thread prints a message to say why.
 
+The property `jmeter.exit.check.pause` can be used to override the default pause of 2000ms(2secs). If set to 0, then JMeter does not start the daemon thread.
 
 ### 1.5 Configuring JMeter
 
@@ -510,21 +524,29 @@ If you wish to modify the properties with which JMeter runs you need to either m
 
 > Note: You can define additional JMeter properties in the file defined by the JMeter property `user.properties` which has the default value `user.properties`. The file will be automatically loaded if it is found in the current directory or if it is found in the JMeter bin directory. Similarly, `system.properties` is used to update system properties.
 
-| Attribute    | Description                                                  | Required |
-| ------------ | ------------------------------------------------------------ | -------- |
-| ssl.provider | You can specify the class for your SSL implementation if you don’t want to use the built-in Java implantation. | No       |
-| xml.parser   | You can specify an implementation as your XML parser. The default value is : `org.apache.xerces.parsers.SAXParser` | No       |
-| remote_hosts | Comma-                                                       |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
-|              |                                                              |          |
+| Attribute               | Description                                                  | Required |
+| ----------------------- | ------------------------------------------------------------ | -------- |
+| ssl.provider            | You can specify the class for your SSL implementation if you don’t want to use the built-in Java implantation. | No       |
+| xml.parser              | You can specify an implementation as your XML parser. The default value is : `org.apache.xerces.parsers.SAXParser` | No       |
+| remote_hosts            | Comma-delimited list of remote JMeter hosts(or host:port if required). If you are running JMeter in a distributed environment, list the machines where you have JMeter remote servers running. This will allow you to control those servers from this machine’s GUI | No       |
+| not_in_menu             |                                                              |          |
+| search_paths            |                                                              |          |
+| user.classpath          |                                                              |          |
+| plugin_dependency_paths |                                                              |          |
+| user.properties         | Name of file containing additional JMeter properties. These are added after the initial property file, but before the `-q` and `-J` options are processed. | No       |
+| system.properties       | Name of file containing additional system properties. These are added before the `-S` and `-D` options are processed. | No       |
 
+The command line options and properties files are processed in the following order:
 
+1. `-p propfile`
+2. `jmeter.properties`(or the file from the `-p` option) is then loaded
+3. `-j logfile`
+4. Logging is initialised
+5. `user.properties` is loaded
+6. `system.properties` is loaded
+7. all other command-line options are processed
 
-
+See also the comments in the `jmeter.properties`, `user.properties` and `system.properties` files for further information on other settings you can change.
 
 ## 2. Building a Test Plan
 
@@ -1376,15 +1398,62 @@ Refer to HTTP(S) Test Script Recorder for details on setting up the recorder. Th
 
 ### 16.9 BeanShell scripting
 
-
+> Since JMeter 3.1, we advise switching from BeanShell to JSR223 Test Elements, and switching from `__Beanshell` function to `__groovy` function.
 
 #### 16.9.1 Overview
 
+**Each BeanShell test element has its own copy of the interpreter (for each thread)**. If the test element is repeatedly called, e.g. within a loop, then the interpreter is retained between invocations unless the “`Reset bsh.Interpreter before each call`” option is selected.
 
+Some long-running tests may cause the interpreter to use lots of memory; if this is the case try using the reset option.
+
+you can test BeanShell scripts outside JMeter by using the command-line interpreter:
+
+```bash
+$ java -cp bsh-xxx.jar[;other jars as needed] bsh.Interpreter file.bsh [parameters]
+```
+
+or
+
+```bash
+$ java -cp bsh-xxx.jar bsh.Interpreter
+bsh% source("file.bsh");
+bsh% exit(); // or use EOF key (e.g. ^Z or ^D)
+```
 
 #### 16.9.2 Sharing Variables
 
+Variables can be defined in startup (initialisation) scripts. These will be retained across invocations of the test element, unless the reset option is used.
 
+Scripts can also access JMeter variables using the `get()` and `put()` methods of the “vars” variable, for example:
+
+```bash
+vars.get("HOST")
+vars.put("MSG", "Successful")
+```
+
+**The `get()` and `put()` methods only support variables with String values, but there are also `getObject()` and `putObject()` methods which can be used for arbitrary objects.** J<u>Meter variables are local to a thread, but can be used by all test elements (not just Beanshell).</u>
+
+If you need to share variables between threads, then JMeter properties can be used:
+
+```bash
+import org.apache.jmeter.util.JMeterUtils;
+String value = JMeterUtils.getPropDefault("name", "");
+JMeterUtils.setProperty("name", "value");
+```
+
+The sample `.bshrc` files contain sample definitions of `getprop()` and `setprop()` methods.
+
+Another possible method of sharing variables is to use the “`bsh.shared`” shared namespace. For example:
+
+```java
+if (bsh.shared.myObj == void){
+	// not yet defined, so create it:
+	myObj = new AnyObject();
+}
+bsh.shared.myObj.process()l
+```
+
+Rather than creating the obejct in the test element, it can be created in the startup file defined by the JMeter property “`beanshell.init.file`”. This is only processed once.
 
 ### 16.10 Developing script functions in Groovy or Jexl3 etc.
 
@@ -2040,17 +2109,92 @@ Alternatively, this modifier can be attached to select requests and it will modi
 
 
 
-#### User Parameters
+####  User Parameters
 
+Allows the user to <u>==specify values for **User Variables**== specific to[^1] individual threads</u>.
 
+<u>User Variables</u> can also be specified in the Test Plan but <u>not specific to individual threads.</u> This panel allows you to specify a series of values for any User Variable. For each thread, the variable will be assigned one of the values from the series in sequence. If there are more threads than values, the values get re-used. For example, this can be used to assign a distinct user id to be used by each thread. User variables can be referenced in any field of any JMeter Component.
+
+The variable is specified by clicking the Add Variable button in the bottom of the panel and filling in the Variable name in the ’Name:’ column. To add a new value to the series, click the ‘Add User’ button and fill in the desired value in the newly added column.
+
+Values can be accessed in ay test component in the same thread group, using the function syntax: `${variable}`.
+
+See also the CSV Data Set Config element, which is more suitable for large numbers of parameters.
+
+| Attribute                 | Description                                                  | Required |
+| ------------------------- | ------------------------------------------------------------ | -------- |
+| Name                      | Descriptive name for this element that is shown in the tree. |          |
+| Update Once Per Iteration | A flag to indicate whether the User Parameters element should update its variables only once per iteration. If you embed functions into the UP, then you may need greater control over how often the values of the variables are updated. Keep this box checked to ensure the values are updated each time through the UP’s parent controller. Uncheck the box, and the UP will update the parameters for every sample request made within its scope. | Yes      |
 
 #### BeanShell PreProcessor
 
+The BeanShell PreProcessor allows arbitrary code to be applied before taking a sample.
 
+The test element supports the `ThreadListener` and `TestListener` methods. These should be defined in the initialisation file. See the file `BeanShellListeners.bshrc` for example definitions.
+
+| Attribute                              | Description                                                  | Required                            |
+| -------------------------------------- | ------------------------------------------------------------ | ----------------------------------- |
+| Name                                   | Descriptive name for this element that is shown in the tree. <u>The name is stored in the script variable `Labe1`</u> | No                                  |
+| Reset bsh.Interpreter before each call | If this option is selected, then the interpreter will be recreated for each sample. This may be necessary for some long running scripts. For further information, see Best Practices - BeanShell scripting. | Yes                                 |
+| Parameters                             | Parameters to pass to the BeanShell script. The parameters are stored in the following variables:<br>* Parameters - string containing the parameters as a single variable<br>* bsh.args - String array containing parameters, split on white-space | No                                  |
+| Script file                            | A file containing the BeanShell script to run. The file name is stored in the script variable `FileName` | No                                  |
+| Script                                 | The BeanShell script. The return value is ignored.           | Yes(unless script file is provided) |
+
+Before invoking the script, some variables are set up in the BeanShell interpreter:
+
+* log - (Logger) - can be used to write to the log file
+
+* ctx - (JMeterContext) - gives access to the context
+
+* vars - (JMeterVariables) - gives read/write access to variables:
+
+  ```bash
+  vars.get(key);
+  vars.put(key,val);
+  vars.putObject("OBJ1",new Object());
+  ```
+
+* props - (JMeterProperties - class java.util.Properties) - e.g. `props.get("START.HMS");` `props.put("PROP1", "1234");`
+
+* prev - (SampleResult) - gives access to the previous SampleResult(if any)
+
+* sampler - (Sampler) - gives access to the current sampler
+
+For details of all the methods available on each of the above variables, please check the javadoc
+
+If the property `beanshell.preprocessor.init` is defined, this is used to load an initialisation file, which can be used to define methods etc. for use in the BeanShell script.
 
 ### 18.8 Post-Processors
 
+As the name suggests, Post-Processors are applied after samplers. Note that <u>they are applied to all the samplers in the same scope, so to ==ensure that a post-processor is applied only to a particular sampler==, **add it as a child of the sampler**.</u>
+
+> Note: Unless documented otherwise, Post-Processors are not applied to sub-samples(child samples) - only to the parent sample. In the case of JSR223 and BeanShell post-processors, the script can retrieve sub-samples using the method `prev.getSubResults()` which returns an array of SampleResults. The array will be empty if there are none.
+
+Post-processors are run before Assertions, so they do not have access to any Assertion Results, nor will the sample status reflect the results of any Assertions. If you require access to Assertion Results, try using a Listener instead. Also note that the variable `JMeterThread.last_sample_ok` is set to “true” or “false” after all Assertions have been run.
+
 #### XPath Extractor
+
+This test element allows the user to extract value(s) from structured response - XML or (X)HTML - using XPath query language.
+
+> Since JMeter 5.0, you should use XPath2 Extractor as it provides better and easier namespace management, better performances and support for XPath 2.0
+
+| Attribute                                             | Description                                                  | Required                |
+| ----------------------------------------------------- | ------------------------------------------------------------ | ----------------------- |
+| Name                                                  | Descriptive name for this element that is shown in the tree. | No                      |
+| Apply to                                              | This is for use with samplers that can generate sub-samples, e.g. HTTP Sampler with embeded resources, Mail Reader or samples generated by the Transaction Controller.<br>* Main sample only - only applies to the main sample<br>* Sub-samples only - only applies to the sub-samples<br>* Main sample and sub-samples - applies to both.<br>* JMeter Variable Name to use - extraction is to be applied to the contents of the named variable<br>Xpath matching is applied to all qualifying samples in turn, and all the matching results will be returned. | Yes                     |
+| Use Tidy(tolerant parser)                             | If checked use Tidy to parse HTML response into XHTML.<br>* “Use Tidy” should be checked on for HTML response. Such response is converted to valid XHTML(XML compatible HTML) using Tidy<br>* “Use Tidy” should be unchecked for both XHTML or XML response(for example RSS)<br>For HTML, CSS Selector Extractor is the correct and performing solution. Don’t use XPath for HTML extractions. | Yes                     |
+| Quiet                                                 | Sets the Tidy Quiet flag                                     | If Tidy is selected     |
+| Report Errors                                         | If a Tidy error occurs, then set the Assertion accordingly   | If Tidy is selected     |
+| Show warnings                                         | Sets the Tidy showWarnings option                            | If Tidy is selected     |
+| Use Namespaces                                        | If checked, then the XML parser will use namespace resolution.(see note below on NAMESPACE) Note that **<u>currently only namespaces declared on the ==root element== will be recognised</u>**. See below for user-definition of addtional workspace names. | If Tidy is not selected |
+| Validate XML                                          | Check the document against its schema.                       | If Tidy is not selected |
+| Ignore Whitespace                                     | Ignore Element Whitespace.                                   | If Tidy is not selected |
+| Fetch External DTDs                                   | If selected, external DTDs are fetched.                      | If Tidy is not selected |
+| Return entire XPath fragment instead of text content? | If selected, the fragment will be returned rathter than the text content. For example `\\title` would return `<title>Apache JMeter</title>` rather than “`Apache JMeter`”. In this case, `//title/text()` would return “`Apache JMeter`”. | Yes                     |
+| Name of created variable                              | The anme of the JMeter variable in which to store the result. | Yes                     |
+| XPath Query                                           | Element query in XPath language. Can return more than one match. | Yes                     |
+| Match No. (0 for Random)                              | If the XPath Path query leads to many results, you can choose which one(s) to extract as Variables:<br>* 0: means random<br>* -1 means extract all results (default value), they will be named as `<variable name>_N` (where N goes from 1 to Number of results)<br>* X: means extract the X<sup>th</sup> result. If this X<sup>th</sup> is greater than number of matches, then nothing is returned. Default value will be used | No                      |
+| Default Value                                         | Default value returned when no match found. It is also returned if the node has no value and the fragment option is not selected. |                         |
 
 
 
@@ -2066,7 +2210,9 @@ Alternatively, this modifier can be attached to select requests and it will modi
 
 #### Test Plan
 
+The Test Plan is where the overall settings for a test are specified.
 
+Static variables can be defined for values that are repeated throughout a test, such as server names.
 
 #### Thread Group
 
@@ -2076,7 +2222,41 @@ Alternatively, this modifier can be attached to select requests and it will modi
 
 #### HTTP(S) Test Script Recorder
 
+##### HTTPS recording and certificates
 
+##### Installing the JMeter CA certificate for HTTPS recording
+
+###### Installing the certificate in Firefox
+
+###### Installing the certificate in Chrome or Internet Explorer
+
+###### Installing the certificate in Opera
+
+##### Recording and redirects
+
+##### Includes and Excludes
+
+##### Capturing binary POST data
+
+##### Adding timers
+
+##### Where Do Samples Get Recorded?
+
+##### Handling of HTTP Request Defaults
+
+##### User Defined Variable replacement
+
+##### How can I record the server’s responses too?
+
+##### Associating requests with responses
+
+##### Cookie Manager
+
+##### Authorization Manager
+
+##### Uploading files
+
+##### Recording HTTP Based Non Textual Protocols not natively available in JMeter
 
 #### Test Fragment
 
@@ -2094,11 +2274,6 @@ Alternatively, this modifier can be attached to select requests and it will modi
 
 
 
-
-
-
-
-
-
-
+[^1]: specific to something: *formal* limited to or affecting only one particular thing
+[^2]: Some fatal errors may still invoke `System.exit()`
 
