@@ -1382,7 +1382,7 @@ See Building an Advanced Web Test for information.
 
 ### 16.5 Using the HTTP(S) Test Script Recorder
 
-Refer to HTTP(S) Test Script Recorder for details on setting up the recorder. The most important thing to do is filter out all requests you aren’t interested in. For instance, there’s no point in recording image requests(JMeter can be instructed to download all images on a page). These will just clutter your test plan. Most likely, these is an extension all your files share, such as .jsp, .asp, .php, .html or the like. These you should “include” by entering “`.*\.jsp*`” as an “Include Pattern”.
+Refer to HTTP(S) Test Script Recorder for details on setting up the recorder. The most important thing to do is filter out all requests you aren’t interested in. For instance, there’s no point in recording image requests(JMeter can be instructed to download all images on a page). These will just clutter your test plan. Most likely, these is an extension all your files share, such as `.jsp`, `.asp`, `.php`, `.html` or the like. These you should “include” by entering “`.*\.jsp*`” as an “Include Pattern”.
 
 ### 16.6 User variables
 
@@ -1422,7 +1422,7 @@ bsh% exit(); // or use EOF key (e.g. ^Z or ^D)
 
 #### 16.9.2 Sharing Variables
 
-Variables can be defined in startup (initialisation) scripts. These will be retained across invocations of the test element, unless the reset option is used.
+Variables can be defined in startup (initialization) scripts. These will be retained across invocations of the test element, unless the reset option is used.
 
 Scripts can also access JMeter variables using the `get()` and `put()` methods of the “vars” variable, for example:
 
@@ -1431,7 +1431,7 @@ vars.get("HOST")
 vars.put("MSG", "Successful")
 ```
 
-**The `get()` and `put()` methods only support variables with String values, but there are also `getObject()` and `putObject()` methods which can be used for arbitrary objects.** J<u>Meter variables are local to a thread, but can be used by all test elements (not just Beanshell).</u>
+**The `get()` and `put()` methods only support variables with String values, but there are also `getObject()` and `putObject()` methods which can be used for arbitrary objects.** J<u>Meter variables are local to a thread, but can be used by all test elements (not just BeanShell).</u>
 
 If you need to share variables between threads, then JMeter properties can be used:
 
@@ -1453,7 +1453,7 @@ if (bsh.shared.myObj == void){
 bsh.shared.myObj.process()l
 ```
 
-Rather than creating the obejct in the test element, it can be created in the startup file defined by the JMeter property “`beanshell.init.file`”. This is only processed once.
+Rather than creating the object in the test element, it can be created in the startup file defined by the JMeter property “`beanshell.init.file`”. This is only processed once.
 
 ### 16.10 Developing script functions in Groovy or Jexl3 etc.
 
@@ -1806,15 +1806,17 @@ The View Results Tree shows a tree of all sample responses, allowing you to view
 
 There are several ways to view the response, selectable by a drop-down box at the bottom of the left hand panel.
 
-| Renderer | Description |
-| -------- | ----------- |
-|          |             |
+| Renderer | Description                                                  |
+| -------- | ------------------------------------------------------------ |
+| HTML     | The HTML view attempts to render the response as HTML. The rendered HTML is likely to compare poorly to the view one would get in any web browser; however, it does provide a quick approximation that is helpful for initial result evaluation. |
+| JSON     | The JSON view will show the response in tree style (also handles JSON embedded in JavaScript) |
+| Text     | The default Text view shows all of the text contained in the response. Note that <u>this will only work if the response ==`content-type` is considered to be text==. If the `content-type` begins with any of the following, it is considered as ==binary==</u>, otherwise it is considered to be text.<br>`image/`, `audio/`, `video/` |
 
 Scroll automatically? option permit to have last node display in tree selection
 
 > Starting with version 3.2 the number of entries in the View is restricted to the value of the property `view.results.tree.max_results` which defaults to 500 entries. The old behavior can be restored by setting the property to 0. Beware, that this might consume a lot of memory.
 
-
+With Search option, most of the views also allow the displayed data to be searched; the result of the search will be high-lighted in the display above. For example the Control panel
 
 
 
@@ -1828,9 +1830,9 @@ Calculation of the Median and 90% Line (90<sup>th</sup> percentile) values requi
 
 > Starting with JMeter 2.12, you can configure the 3 percentile values you want to compute, this can be done by setting properties:
 >
-> * aggregate_rpt_pct1: defaults to 90<sup>th</sup> percentile
-> * aggregate_rpt_pct2: defaults to 95<sup>th</sup> percentile
-> * aggregate_rpt_pct3: defaults to 99<sup>th</sup> percentile
+> * `aggregate_rpt_pct1`: defaults to 90<sup>th</sup> percentile
+> * `aggregate_rpt_pct2`: defaults to 95<sup>th</sup> percentile
+> * `aggregate_rpt_pct3`: defaults to 99<sup>th</sup> percentile
 
 
 
@@ -1888,7 +1890,7 @@ If the Recycle option is false, and Stop Thread is true, then reaching EOF will 
 | Allow quoted data?               | Should the CSV file allow values to be quoted? If enabled, then values can be enclosed in `“` - double-quote - allowing values to contain a delimiter. | Yes      |
 | Recycle on EOF?                  | Should the file be re-read from the beginning on reaching EOF?(default is true) | Yes      |
 | Stop thread on EOF?              | Should the thread be stopped on EOF, if Recycle is false?    | Yes      |
-| Sharing mode                     | * All threads - (the default) the file is shared between all the threads.<br>* Current thread group - each file is opened once for each thread group in which the element appears<br>* Current thread - each file is opened separately for each thread<br>* Identifier - all threads sharing the same identifier share the same file. So for example if you have 4 thread groups, you could use a common id for two or more of the groups to share the file between the same thead numbers in different thread groups. | Yes      |
+| Sharing mode                     | * All threads - (the default) the file is shared between all the threads.<br>* Current thread group - each file is opened once for each thread group in which the element appears<br>* Current thread - each file is opened separately for each thread<br>* Identifier - all threads sharing the same identifier share the same file. So for example if you have 4 thread groups, you could use a common id for two or more of the groups to share the file between the same thread numbers in different thread groups. | Yes      |
 
 #### HTTP Authorization Manager
 
@@ -1987,13 +1989,13 @@ HTTP Request Advanced config fields
 | Port                                            | Port the web server is listening to.                         | No                                     |
 | Connect Timeout                                 | Connection Timeout. Number of milliseconds to wait for a connection to open. | No                                     |
 | Response Timeout                                | Response Timeout. Number of milliseconds to wait for a response. | No                                     |
-| Implementation                                  | java, HttpClinet4. If not specified the default depends on the value of JMeter property `jmeter.httpsampler`, failing that, the Java implementation is used. | No                                     |
+| Implementation                                  | java, HttpClient4. If not specified the default depends on the value of JMeter property `jmeter.httpsampler`, failing that, the Java implementation is used. | No                                     |
 | Protocol                                        | HTTP or HTTPS                                                | No                                     |
 | Content encoding                                | The encoding to be used for the request.                     | No                                     |
 | Path                                            | The path to resource(for example, `/servlets/myServlet`). If the response requires query string parameters, add them below in the “Send Parameters With the Request” section. Note that the path is the default for the full path, not a prefix to be applied to paths specified on the HTTP Request screens. | No                                     |
 | Send Parameters With the Request                | The query string will be generated from the list of parameters you provide. Each parameter has a name and value. The query string will be generated in the correct fashion, depending on the choice of “Method” you made(i.e. if you chose GET, the query string will be appended to the URL, if POST, then it will be sent separately). Also, if you are sending a file using a multipart form, the query string will be created using the multipart form specifications. | No                                     |
 | Server(proxy)                                   | Hostname or IP address of a proxy server to perform request.[Do not include the http:// prefix] | No                                     |
-| Port                                            | Port the proxy server is listenling to.                      | No, unless proxy hostname is specified |
+| Port                                            | Port the proxy server is listening to.                       | No, unless proxy hostname is specified |
 | Username                                        | (Optional) username for proxy server.                        | No                                     |
 | Password                                        | (Optional) password for proxy server. (N.B. this is stored unencrypted in the test plan) | No                                     |
 | Retrieve All Embedded Resources from HTML Files | Tell JMeter to parse the HTML file and send HTTP/HTTPS requests for all images, Java applets, JavaScript files, CSSs, etc. referenced in the file. | No                                     |
@@ -2017,7 +2019,7 @@ The Header Manager lets you add or override HTTP request headers.
 | Value          | Request header value.                                        | No(You should have at least one, however) |
 | Add Button     | Add an entry to the header table.                            | N/A                                       |
 | Delete Button  | Delete the currently selected table entry.                   | N/A                                       |
-| Load Button    | Load a previouly saved header table and add the entries to the existing header table entries. | N/A                                       |
+| Load Button    | Load a previously saved header table and add the entries to the existing header table entries. | N/A                                       |
 | Save As Button | Save the current header table to a file.                     | N/A                                       |
 
 ##### Header Manager example
@@ -2067,7 +2069,7 @@ The Random Variables Config Element is used to generate random numeric strings a
 
 The output variable is constructed by using the random number generator, and then the resulting number is formatted using the format string. The number is calculated using the formula `minimun+Random.nextInt(maximum-minimum+1)`. `Random.nextInt()` requires a positive integer. This means that maximum-minimum - i.e. the range - must be less than 2147483647, however the minimum and maximum values can be any long values so long as the range is OK.
 
-> As the random value is evaluted at the start of each iteration, it is probably not a good idea to use a variable other than a property as a value for the mimimum or maximum. It would be zero on the first iteration.
+> As the random value is evaluated at the start of each iteration, it is probably not a good idea to use a variable other than a property as a value for the minimum or maximum. It would be zero on the first iteration.
 
 | Attribute         | Description                                                  | Required |
 | ----------------- | ------------------------------------------------------------ | -------- |
@@ -2081,7 +2083,24 @@ The output variable is constructed by using the random number generator, and the
 
 ### 18.5 Assertions
 
+Assertions are used to perform additional checks on samples,and are processed after every sampler in the same scope.  To ensure that Assertion is applied only to a particular sampler, add it as a child of the sampler.
+
+> Note: <u>Unless documented otherwise, ==Assertions are not applied to sub-samples(child samples)== - **only to the parent sample**.</u> In the case of JSR223 and BeanShell Assertions, the script can retrieve sub-samples using the method `prev.getSubResults()` which returns an array of SampleResults. The array will be empty if there are none.
+
+Assertions can be applied to either the main sample, the sub-samples or both. The default is to apply the assertion to the main sample only. If the Assertion supports this option, then there will be an entry on the GUI which looks like the following:
+
+![](https://jmeter.apache.org/images/screenshots/assertion/assertionscopevar.png)
+
+If a sub-sampler fails and the main sample is successful, then the main sample will be set to failed status and an Assertion Result will be added. If the JMeter variable option is used, it is assumed to relate to the main sample, and any failure will be applied to the main sample only.
+
+> The variable `JMeterThread.last_sample_ok` is updated to “true” or “false” after all assertions for a sampler have been run.
+
 #### Response Assertion
+
+The response assertion control panel lets you add pattern strings to be compared against various fields of the request or response. The pattern strings are:
+
+* Contains, Matches: Perl5-style regular expressions
+* Equals, Substring: plain text, case-sensitive
 
 
 
@@ -2093,9 +2112,9 @@ The output variable is constructed by using the random number generator, and the
 
 #### HTTP URL Re-writing Modifier
 
-This modifier works similarly to the HTML Link Parser, except it has a specifc purpose for which it is easier to use than the HTML Link Parser, and more efficient. For <u>web applications that ==use URL Re-writing to store session ids instead of cookies==, this element can be ==attached at the ThreadGroup level==, much like the HTTP Cookie Manager.</u> Simply give it the name of the session id parameter, and it will find it on the page and add the argument to every request of that ThreadGroup.
+This modifier works similarly to the HTML Link Parser, except it has a specific purpose for which it is easier to use than the HTML Link Parser, and more efficient. For <u>web applications that ==use URL Re-writing to store session ids instead of cookies==, this element can be ==attached at the ThreadGroup level==, much like the HTTP Cookie Manager.</u> Simply give it the name of the session id parameter, and it will find it on the page and add the argument to every request of that ThreadGroup.
 
-Alternatively, this modifier can be attached to select requests and it will modify only them. Clever users will even deternime that this modifier can be used to grab values that elude the HTML Link Parser.
+Alternatively, this modifier can be attached to select requests and it will modify only them. Clever users will even determine that this modifier can be used to grab values that elude the HTML Link Parser.
 
 | Attribute                                 | Description                                                  | Required |
 | ----------------------------------------- | ------------------------------------------------------------ | -------- |
@@ -2124,21 +2143,21 @@ See also the CSV Data Set Config element, which is more suitable for large numbe
 | Attribute                 | Description                                                  | Required |
 | ------------------------- | ------------------------------------------------------------ | -------- |
 | Name                      | Descriptive name for this element that is shown in the tree. |          |
-| Update Once Per Iteration | A flag to indicate whether the User Parameters element should update its variables only once per iteration. If you embed functions into the UP, then you may need greater control over how often the values of the variables are updated. Keep this box checked to ensure the values are updated each time through the UP’s parent controller. Uncheck the box, and the UP will update the parameters for every sample request made within its scope. | Yes      |
+| Update Once Per Iteration | A flag to indicate whether the User Parameters element should update its variables only once per iteration. If you embed functions into the UP, then you may need greater control over how often the values of the variables are updated. Keep this box checked to ensure the values are updated each time through the UP ’s parent controller. Uncheck the box, and the UP will update the parameters for every sample request made within its scope. | Yes      |
 
 #### BeanShell PreProcessor
 
 The BeanShell PreProcessor allows arbitrary code to be applied before taking a sample.
 
-The test element supports the `ThreadListener` and `TestListener` methods. These should be defined in the initialisation file. See the file `BeanShellListeners.bshrc` for example definitions.
+The test element supports the `ThreadListener` and `TestListener` methods. These should be defined in the initialization file. See the file `BeanShellListeners.bshrc` for example definitions.
 
-| Attribute                              | Description                                                  | Required                            |
-| -------------------------------------- | ------------------------------------------------------------ | ----------------------------------- |
-| Name                                   | Descriptive name for this element that is shown in the tree. <u>The name is stored in the script variable `Labe1`</u> | No                                  |
-| Reset bsh.Interpreter before each call | If this option is selected, then the interpreter will be recreated for each sample. This may be necessary for some long running scripts. For further information, see Best Practices - BeanShell scripting. | Yes                                 |
-| Parameters                             | Parameters to pass to the BeanShell script. The parameters are stored in the following variables:<br>* Parameters - string containing the parameters as a single variable<br>* bsh.args - String array containing parameters, split on white-space | No                                  |
-| Script file                            | A file containing the BeanShell script to run. The file name is stored in the script variable `FileName` | No                                  |
-| Script                                 | The BeanShell script. The return value is ignored.           | Yes(unless script file is provided) |
+| Attribute                                | Description                                                  | Required                            |
+| ---------------------------------------- | ------------------------------------------------------------ | ----------------------------------- |
+| Name                                     | Descriptive name for this element that is shown in the tree. <u>The name is stored in the script variable `Labe1`</u> | No                                  |
+| Reset `bsh.Interpreter` before each call | If this option is selected, then the interpreter will be recreated for each sample. This may be necessary for some long running scripts. For further information, see Best Practices - BeanShell scripting. | Yes                                 |
+| Parameters                               | Parameters to pass to the BeanShell script. The parameters are stored in the following variables:<br>* `Parameters` - string containing the parameters as a single variable<br>* `bsh.args` - String array containing parameters, split on white-space | No                                  |
+| Script file                              | A file containing the BeanShell script to run. The file name is stored in the script variable `FileName` | No                                  |
+| Script                                   | The BeanShell script. The return value is ignored.           | Yes(unless script file is provided) |
 
 Before invoking the script, some variables are set up in the BeanShell interpreter:
 
@@ -2154,7 +2173,7 @@ Before invoking the script, some variables are set up in the BeanShell interpret
   vars.putObject("OBJ1",new Object());
   ```
 
-* props - (JMeterProperties - class java.util.Properties) - e.g. `props.get("START.HMS");` `props.put("PROP1", "1234");`
+* props - (JMeterProperties - class `java.util.Properties`) - e.g. `props.get("START.HMS");` `props.put("PROP1", "1234");`
 
 * prev - (SampleResult) - gives access to the previous SampleResult(if any)
 
@@ -2162,7 +2181,7 @@ Before invoking the script, some variables are set up in the BeanShell interpret
 
 For details of all the methods available on each of the above variables, please check the javadoc
 
-If the property `beanshell.preprocessor.init` is defined, this is used to load an initialisation file, which can be used to define methods etc. for use in the BeanShell script.
+If the property `beanshell.preprocessor.init` is defined, this is used to load an initialization file, which can be used to define methods etc. for use in the BeanShell script.
 
 ### 18.8 Post-Processors
 
@@ -2181,30 +2200,125 @@ This test element allows the user to extract value(s) from structured response -
 | Attribute                                             | Description                                                  | Required                |
 | ----------------------------------------------------- | ------------------------------------------------------------ | ----------------------- |
 | Name                                                  | Descriptive name for this element that is shown in the tree. | No                      |
-| Apply to                                              | This is for use with samplers that can generate sub-samples, e.g. HTTP Sampler with embeded resources, Mail Reader or samples generated by the Transaction Controller.<br>* Main sample only - only applies to the main sample<br>* Sub-samples only - only applies to the sub-samples<br>* Main sample and sub-samples - applies to both.<br>* JMeter Variable Name to use - extraction is to be applied to the contents of the named variable<br>Xpath matching is applied to all qualifying samples in turn, and all the matching results will be returned. | Yes                     |
+| Apply to                                              | This is for use with samplers that can generate sub-samples, e.g. HTTP Sampler with embedded resources, Mail Reader or samples generated by the Transaction Controller.<br>* Main sample only - only applies to the main sample<br>* Sub-samples only - only applies to the sub-samples<br>* Main sample and sub-samples - applies to both.<br>* JMeter Variable Name to use - extraction is to be applied to the contents of the named variable<br>Xpath matching is applied to all qualifying samples in turn, and all the matching results will be returned. | Yes                     |
 | Use Tidy(tolerant parser)                             | If checked use Tidy to parse HTML response into XHTML.<br>* “Use Tidy” should be checked on for HTML response. Such response is converted to valid XHTML(XML compatible HTML) using Tidy<br>* “Use Tidy” should be unchecked for both XHTML or XML response(for example RSS)<br>For HTML, CSS Selector Extractor is the correct and performing solution. Don’t use XPath for HTML extractions. | Yes                     |
 | Quiet                                                 | Sets the Tidy Quiet flag                                     | If Tidy is selected     |
 | Report Errors                                         | If a Tidy error occurs, then set the Assertion accordingly   | If Tidy is selected     |
 | Show warnings                                         | Sets the Tidy showWarnings option                            | If Tidy is selected     |
-| Use Namespaces                                        | If checked, then the XML parser will use namespace resolution.(see note below on NAMESPACE) Note that **<u>currently only namespaces declared on the ==root element== will be recognised</u>**. See below for user-definition of addtional workspace names. | If Tidy is not selected |
+| Use Namespaces                                        | If checked, then the XML parser will use namespace resolution.(see note below on NAMESPACE) Note that **<u>currently only namespaces declared on the ==root element== will be recognized</u>**. See below for user-definition of additional workspace names. | If Tidy is not selected |
 | Validate XML                                          | Check the document against its schema.                       | If Tidy is not selected |
 | Ignore Whitespace                                     | Ignore Element Whitespace.                                   | If Tidy is not selected |
 | Fetch External DTDs                                   | If selected, external DTDs are fetched.                      | If Tidy is not selected |
-| Return entire XPath fragment instead of text content? | If selected, the fragment will be returned rathter than the text content. For example `\\title` would return `<title>Apache JMeter</title>` rather than “`Apache JMeter`”. In this case, `//title/text()` would return “`Apache JMeter`”. | Yes                     |
-| Name of created variable                              | The anme of the JMeter variable in which to store the result. | Yes                     |
-| XPath Query                                           | Element query in XPath language. Can return more than one match. | Yes                     |
-| Match No. (0 for Random)                              | If the XPath Path query leads to many results, you can choose which one(s) to extract as Variables:<br>* 0: means random<br>* -1 means extract all results (default value), they will be named as `<variable name>_N` (where N goes from 1 to Number of results)<br>* X: means extract the X<sup>th</sup> result. If this X<sup>th</sup> is greater than number of matches, then nothing is returned. Default value will be used | No                      |
+| Return entire XPath fragment instead of text content? | If selected, the fragment will be returned rather than the text content. For example `\\title` would return `<title>Apache JMeter</title>` rather than “`Apache JMeter`”. In this case, `//title/text()` would return “`Apache JMeter`”. | Yes                     |
+| Name of created variable                              | The name of the JMeter variable in which to store the result. | Yes                     |
+| XPath Query                                           | Element query in XPath language. Can <u>return **more than one** match</u>. | Yes                     |
+| Match No. (0 for Random)                              | If the XPath Path query leads to many results, you can choose which one(s) to extract as Variables:<br>* 0: means random<br>* -1: means extract all results (default value), they will be named as `<variable name>_N` (where N goes from 1 to Number of results)<br>* X: means extract the X<sup>th</sup> result. If this X<sup>th</sup> is greater than number of matches, then nothing is returned. Default value will be used | No                      |
 | Default Value                                         | Default value returned when no match found. It is also returned if the node has no value and the fragment option is not selected. |                         |
 
+To  allow for use in a <u>ForEach Controller</u>,  the following variables are set on return:
 
+* `refName` - set to first (or only) match; if no match, then set to default
+* `refName_matchNr` - set to number of matches (may be 0)
+* `refName_n` - n=1,2,3, etc. Set to the 1<sup>st</sup> , 2<sup>nd</sup>, 3<sup>rd</sup> match etc.
+
+> Note: The next `refName_n` variable is set to `null` - e.g. if there are 2 matches, then `refName_3` is set to `null`, and if there are no matches, then `refName_1` is set to null.
+
+XPath is query language targeted primarily for XSLT transformations. However it is useful as generic query language for structured data too. See XPath Reference or XPath specification for more information. Here are few examples:
+
+`/html/head/title`
+
+​			extracts title element from HTML response
+
+`/book/page[2]`
+
+​			extracts 2<sup>nd</sup> page from a book
+
+`/book/page`
+
+​			extracts all pages from a book
+
+`//form[@name='countryForm']//select[@name='country']/option[text()='Czech Republic']/@value`
+
+​			extracts value attribute of option element that match text ‘Czech Republic’ inside of select element with name attribute ‘country’ inside of form with name attribute `‘countryForm`’
+
+> When “Use Tidy” is checked on - resulting XML document may slightly differ from original HTML response:
+>
+> * All elements and attribute names are converted to lowercase
+> * Tidy attempts to correct improperly nested elements. For example - original (incorrect) `ul/font/li` becomes correct `ul/li/font`
+
+> NAMESPACES
+>
+> As a work-round for namespace limitations of the Xalan XPath parser(implementation on which JMeter is based) you need to :
+>
+> * provide a Properties file (if for example your file is named `namespaces.properties`) which contains mappings for the namespace prefixes:
+>
+> 	```properties
+> 	prefix1=http\://foo.apache.org
+> 	prefix2=http\://toto.apache.org
+> 	...
+> 	```
+>
+> * reference this file in `user.properties` file using the property:
+>
+> 	```properties
+> 	xpath.namespace.config=namespaces.properties
+> 	```
+>
+> ```xquery
+> //mynamespace:tagname
+> //*[local-name()='tagname' and namespace-uri()='uri-for-namespace']
+> ```
 
 #### BeanShell PostProcessor
 
+The BeanShell PreProcessor allows arbitrary code to be applied after taking a sample.
 
+<u>BeanShell Post-Processor **no longer ignores samples with zero-length result data**.</u>
+
+The test element supports the `ThreadListener` and `TestListener` methods. These should be defined in the initialization file. See the file `BeanShellListeners.bshrc` for example definitions.
+
+| Attribute                                | Description                                                  | Required                            |
+| ---------------------------------------- | ------------------------------------------------------------ | ----------------------------------- |
+| Name                                     | Descriptive name for this element that is shown in the tree. The name is stored in the script variable `Label` | No                                  |
+| Reset `bsh.Interpreter` before each call | If this option is selected, then the interpreter will be recreated for each sample. This may be necessary for some long running scripts. | Yes                                 |
+| Parameters                               | Parameters to pass to the BeanShell script. The parameters are stored in the following variables:<br>* `Parameters` - string containing the parameters as a single variable<br>* `bsh.args` -  String array containing parameters, split on white-space | No                                  |
+| Script file                              | A file containing the BeanShell script to run. The filename is stored in the script variable `FileName` | No                                  |
+| Script                                   | The BeanShell script. The return value is ignored.           | Yes(unless script file is provided) |
+
+The following BeanShell variables are set up for use by the script:
+
+* log - (Logger) - can be used to write to the log file
+
+* ctx - (JMeterContext) - gives access to the context
+
+* vars - (JMeterVariables) - gives read/write access to variables:
+
+	```bash
+	vars.get(key);
+	vars.put(key, val);
+	vars.putObject("OBJ1", new Object());
+	```
+
+* props - (JMeterProperties - class `java.util.Properties`) - e.g. `props.get("START.HMS");` `props.put("PROP1", "1234");`
+
+* prev -  (SampleResult) - gives access to the previous SampleResult
+
+* data - (byte []) - gives access to the current sample data
+
+If the property `beanshell.postprocessor.init` is defined, this is used to load an initialization file, which can be used to define methods etc. for use in the BeanShell script.
 
 #### JSON Extractor
 
+The JSON PostProcessor enables you extract data from JSON responses using JSON-PATH syntax. This post processor is very similar to Regular expression extractor. It must be placed as a child of HTTP Sampler or any other sampler that has responses. It will allow you to extract in a very easy way text content.
 
+| Attribute                 | Description                                                  | Required |
+| ------------------------- | ------------------------------------------------------------ | -------- |
+| Name                      | Descriptive name for this element that is shown in the tree. | No       |
+| Name of created variables | Semi-colon separated names of variables that will contain the results of JSON-PATH expressions (must match number of JSON-PATH expressions) | Yes      |
+| JSON Path Expressions     | Semi-colon separated JSON-PATH expressions (must match number of variables) | Yes      |
+| Match No. (0 for Random)  | If the JSON Path query leads to many results, you can choose which one(s) to extract as Variables:<br>* 0: means random(Default Value)<br>* -1: means extract all results, they will be named as `<variable name>_N` (where N goes from 1 to Number of results)<br>* X: means extract the X<sup>th</sup> result. If this X<sup>th</sup> is greater than number of matches, then nothing is returned. Default value will be used | No       |
+| Compute concatenation var | If many results are found, plugin will concatenate them using ‘,’ separator and store it in var named `<variable name>_ALL` | No       |
+| Default Values            | Semi-colon separated default values if JSON-PATH expressions do not return any result(must match number of variables) | No       |
 
 ### 18.9 Miscellaneous Features
 
@@ -2257,6 +2371,14 @@ Static variables can be defined for values that are repeated throughout a test, 
 ##### Uploading files
 
 ##### Recording HTTP Based Non Textual Protocols not natively available in JMeter
+
+#### Debug Sampler
+
+The Debug Sampler generates a sample containing the values of all JMeter variables and/or properties.
+
+The values can be seen in the <u>View Results Tree</u> Listener Response Data pane.
+
+
 
 #### Test Fragment
 
