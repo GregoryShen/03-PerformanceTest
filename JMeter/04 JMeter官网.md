@@ -514,9 +514,9 @@ If the special name `LAST` is used for the `-t`, `-j` or `-l` flags, then JMeter
 
 #### 1.4.9 CLI mode shutdown
 
-Prior to version 2.5.1, JMeter invoked `System.exit()` when a CLI mode test completed. This caused problems for applications that invoke JMeter directly, so JMeter no longer invokes `System.exit()` for a normal test completion[^2]. JMeter will exit all the non-daemon threads it starts, but it is possible that some non-daemon threads may still remain; these will prevent the JVM from exiting. To detect this situation, JMeter starts a new daemon thread just before it exits. This daemon thread waits a shrot while; if it returns from the wait, then clearly the JVM has not been able to exit, and the thread prints a message to say why.
+Prior to version 2.5.1, JMeter invoked `System.exit()` when a CLI mode test completed. This caused problems for applications that invoke JMeter directly, so JMeter no longer invokes `System.exit()` for a normal test completion[^2]. JMeter will exit all the non-daemon threads it starts, but it is possible that some non-daemon threads may still remain; these will prevent the JVM from exiting. To detect this situation, JMeter starts a new daemon thread just before it exits. This daemon thread waits a short while; if it returns from the wait, then clearly the JVM has not been able to exit, and the thread prints a message to say why.
 
-The property `jmeter.exit.check.pause` can be used to override the default pause of 2000ms(2secs). If set to 0, then JMeter does not start the daemon thread.
+The property `jmeter.exit.check.pause` can be used to override the default pause of 2000 ms(2 secs). If set to 0, then JMeter does not start the daemon thread.
 
 ### 1.5 Configuring JMeter
 
@@ -1688,12 +1688,12 @@ Parameters:
 |                 Server(*proxy*)                 | Hostname or IP address of a proxy server to perform request. [Do not include the http:// prefix.] |                   No                    |
 |                      Port                       | Port the proxy server is listening to.                       | No, unless proxy hostname is specified. |
 |                    Username                     | (Optional) username for proxy server                         |                   No                    |
-|                    Password                     | (Optional) password for proxy server.(N.B. this is stored unencrypted in the test plan) |                   No                    |
+|                    Password                     | (Optional) password for proxy server.(N.B.[^3] this is stored unencrypted in the test plan) |                   No                    |
 |                 Implementation                  | `Java.HTTPClient4`. If not specified (and not defined by HTTP Request Defaults), the default depends on the value of the JMeter property `jmeter.httpsampler`, failing that, the HttpClient4 implementation is used. |                   No                    |
 |                    Protocol                     | HTTP, HTTPS or FILE. Default: HTTP                           |                   No                    |
 |                     Method                      | GET, POST, HEAD, TRACE, OPTIONS, PUT, DELETE, PATCH (not supported for JAVA implementation). With HttpClient4, the following methods related to WebDav are also allowed: COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPPATCH, UNLOCK, REPORT, MKCALENDAR, SEARCH.<br>More methods can be pre-defined for the HttpClient4 by using the JMeter property `httpsampler.user_defined_methods`. |                   Yes                   |
 |                Content Encoding                 | Content encoding to be used (for POST, PUT, PATCH and FILE). This is the character encoding to be used, and ==is not related to the Content-Encoding HTTP header.== |                   No                    |
-|             Redirect Automatically              | <u>Sets the underling http protocol handler to automatically follow redirects, so they are not seen by JMeter</u>, and thus will not appear as samples. ==Should only be used for GET and HEAD requests==. The HttpClient sampler will reject attempts to use it for POST or PUT.<br>Warning: see below for information on cookie and header handling. |                   No                    |
+|             Redirect Automatically              | <u>Sets the underlying http protocol handler to automatically follow redirects, so they are not seen by JMeter</u>, and thus will not appear as samples. ==Should only be used for GET and HEAD requests==. The HttpClient sampler will reject attempts to use it for POST or PUT.<br>Warning: see below for information on cookie and header handling. |                   No                    |
 |                Follow Redirects                 | ==This only has any effect if “<u>Redirect Automatically</u>” is not enabled.== If set, the JMeter sampler will check if the response is a redirect and follow it if so. <u>The initial redirect and further responses will appear as additional samples.</u> The URL and data fields of the parent sample will be taken from the final (non-redirected) sample, but the parent byte count and elapsed time include all samples. The latency is taken from the initial response. Note that the HttpClient sampler may log the following message:<br>“Redirect requested but followRedirects is disabled”<br>This can be ignored.<br>JMeter will collapse paths of the form ‘/../segment’ in both absolute and relative redirect URLs. For example http://host/one../two will be collapsed into http://host/two. If necessary, this behavior can be suppressed by setting the JMeter property `httpsampler.redirect.removeslashdotdot=false` |                   No                    |
 |                  Use KeepAlive                  | JMeter sets the `Connection: keep-alive` header. ==This does not work properly with the default HTTP implementation, as connection re-use is not under user-control.== It does work with the Apache HttpComponents HttpClient implementations. |                   No                    |
 |      Use multipart/form-data for HTTP POST      | Use a `multipart/form-data` or `application/x-www-form-urlencoded` post request |                   No                    |
@@ -2398,4 +2398,6 @@ The values can be seen in the <u>View Results Tree</u> Listener Response Data pa
 
 [^1]: specific to something: *formal* limited to or affecting only one particular thing
 [^2]: Some fatal errors may still invoke `System.exit()`
+
+[^3]:  a Latin phrase (or its abbreviation) used to indicate that special attention should be paid to something
 
