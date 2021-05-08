@@ -1368,7 +1368,7 @@ Ensure you always read changes list to be aware of new improvements and componen
 
 ### 16.2 Use the correct Number of Threads
 
-Your hardware capabilities as well as the Test Plan design will both impact the number of threads you can effectively run with JMeter. The number will also depend on how fast your server is (a faster server makes JMeter work harder since it returns a response quicker). As with any Load Testing tool, if you don’t correctly size the number of threads, you will face the “Coordinated Omission” problem which can give you wrong or inaccurate results. If you need large-scale load testing, consider running multiple CLI JMeter instances on multiple machines using distributed mode (or not). When using distributed mode the result file is combined on the Controller node, if using multiple autonomous instances, the sample result files can be combined for subsequent analysis. For testing how JMeter performs on a given platform, the Java Test sampler can be used. It does not require any network access so can give some idea as to the maximum throughput achievable.
+Your hardware capabilities as well as the Test Plan design will both impact the number of threads you can effectively run with JMeter. The number will also depend on how fast your server is (a faster server makes JMeter work harder since it returns a response quicker). As with any Load Testing tool, if you don’t correctly size the number of threads, you will face the “<u>Coordinated Omission</u>[^4]” problem which can give you wrong or inaccurate results. If you need large-scale load testing, consider running multiple CLI JMeter instances on multiple machines using distributed mode (or not). When using distributed mode the result file is combined on the Controller node, if using multiple autonomous instances, the sample result files can be combined for subsequent analysis. For testing how JMeter performs on a given platform, the Java Test sampler can be used. It does not require any network access so can give some idea as to the maximum throughput achievable.
 
 JMeter has an option to delay thread creation until the thread starts sampling, i.e. after any thread group delay and the ramp-up time for the thread itself. This allows for a very large total number of threads, provided that not too many are active concurrently.
 
@@ -2400,4 +2400,6 @@ The values can be seen in the <u>View Results Tree</u> Listener Response Data pa
 [^2]: Some fatal errors may still invoke `System.exit()`
 
 [^3]:  a Latin phrase (or its abbreviation) used to indicate that special attention should be paid to something
+
+[^4]: 协调遗漏问题，可参考[七层网络性能基准测试中的协调遗漏问题--Coordinated Omission](https://blog.csdn.net/minxihou/article/details/97318121)和[性能测试工具的 Coordinated Omission 问题](https://www.jianshu.com/p/bfb2b0f50edd)
 
