@@ -141,3 +141,8 @@ RT 也就是平均响应时间(Response Time),在聚合报告里面可以看平�
 再看实时监控的平均响应时间
 
 这种曲线图在写性能报告的时候加上会显示更专业
+
+## [39-获取post请求x-www-form-urlencoded格式的数据](https://mp.weixin.qq.com/s/V3WFKs2s7aQjcmo2YotHdg)
+
+
+
