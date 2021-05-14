@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4">
+  <hashTree>
+    <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+      <collectionProp name="CookieManager.cookies"/>
+      <stringProp name="TestPlan.comments">this is a test</stringProp>
+      <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+      <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
+    </CookieManager>
+    <hashTree/>
+  </hashTree>
+</jmeterTestPlan>
